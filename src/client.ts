@@ -16,7 +16,7 @@ const logger: Interceptor = (next) => async (req) => {
 
 const transport = createGrpcWebTransport({
   baseUrl: import.meta.env.VITE_GRPC_WEB_URL || "",
-  interceptors: [logger],
+  interceptors: import.meta.env.DEV ? [logger] : [],
 });
 
 export const client = createPromiseClient(KatariveService, transport);
