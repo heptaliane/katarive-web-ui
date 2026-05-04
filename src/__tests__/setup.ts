@@ -4,7 +4,7 @@ import { vi } from 'vitest'
 // Mock environment variables
 vi.stubGlobal('import.meta', {
   env: {
-    VITE_GRPC_WEB_URL: 'http://localhost:8080',
-    VITE_AUDIO_BASE_URL: 'http://localhost:9422',
+    VITE_GRPC_WEB_URL: 'http://localhost:9421',
+    VITE_AUDIO_BASE_URL: 'http://localhost:9421',
   },
 })
