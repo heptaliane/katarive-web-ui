@@ -44,22 +44,20 @@ npm run dev
 
 ### Production Deployment
 
-To build the UI and host it directly from your Katarive server:
+To build the UI for hosting on a Katarive server:
 
 ```bash
-# This builds the app and copies it to ../katarive-server/web/
-npm run deploy
+npm run build
 ```
 
-Once deployed, access the UI at: `http://localhost:9421/static/`
+Once built, manually copy the contents of the `dist/` directory to your server's static web directory (e.g., `web/` in the server root). Access the UI at: `http://<server-address>:9421/static/`
 
 ## 📜 Available Scripts
 
 - `npm run gen`: Generates TypeScript client code from remote Protobuf definitions.
 - `npm run dev`: Starts the Vite development server.
-- `npm run build`: Builds the production-ready bundle.
+- `npm run build`: Builds the production-ready bundle in the `dist/` directory.
 - `npm run test`: Runs the Vitest test suite.
-- `npm run deploy`: Builds and syncs assets to the Go server for static hosting.
 
 ## ⚙️ Environment Variables
 
@@ -67,8 +65,8 @@ Copy `.env.example` to `.env` to customize your setup:
 
 | Variable | Default | Description |
 | :--- | :--- | :--- |
-| `VITE_GRPC_WEB_URL` | `http://localhost:9421` | The unified port of the Katarive server. |
-| `VITE_AUDIO_BASE_URL` | `http://localhost:9421` | Base URL for fetching generated audio files. |
+| `VITE_GRPC_WEB_URL` | (empty) | The gRPC-Web URL. Defaults to the current origin. |
+| `VITE_AUDIO_BASE_URL` | `/file` | Base URL for fetching audio files. |
 
 ---
 

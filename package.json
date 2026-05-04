@@ -9,8 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "gen": "buf generate",
-    "test": "vitest",
-    "deploy": "npm run build && mkdir -p ../katarive-server/web && cp -rf dist/* ../katarive-server/web/"
+    "test": "vitest"
   },
   "dependencies": {
     "@bufbuild/protobuf": "^1.10.1",

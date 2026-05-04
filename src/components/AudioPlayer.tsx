@@ -3,7 +3,7 @@ interface Props {
 }
 
 export const AudioPlayer = ({ path }: Props) => {
-  const baseUrl = import.meta.env.VITE_AUDIO_BASE_URL || "http://localhost:9421";
+  const baseUrl = import.meta.env.VITE_AUDIO_BASE_URL || "/file";
   // The path from server is like 'data/xxxx.mp3'. 
   // If the static server is pointing at 'data/', we might need to strip it.
   // But usually, it's safer to just provide the full URL logic.

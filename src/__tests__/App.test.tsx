@@ -69,7 +69,7 @@ describe('App Flow', () => {
     // Verify audio player appears
     expect(screen.getByText(/Narration Ready/i)).toBeInTheDocument()
     const audio = document.querySelector('audio')
-    expect(audio).toHaveAttribute('src', 'http://localhost:9421/test.mp3')
+    expect(audio).toHaveAttribute('src', '/file/test.mp3')
   })
 
   it('disables the generate button while a job is in progress', async () => {
