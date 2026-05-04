@@ -66,7 +66,7 @@ Copy `.env.example` to `.env` to customize your setup:
 | Variable | Default | Description |
 | :--- | :--- | :--- |
 | `VITE_GRPC_WEB_URL` | (empty) | The gRPC-Web URL. Defaults to the current origin. |
-| `VITE_AUDIO_BASE_URL` | `/file` | Base URL for fetching audio files. |
+| `VITE_AUDIO_BASE_URL` | (empty) | Base URL for fetching audio files. Defaults to the current origin. |
 
 ---
 

@@ -46,7 +46,7 @@ describe('App Flow', () => {
     // 2. Second wrap: COMPLETED
     mockClient.getJobStatus.mockResolvedValueOnce({
       status: GetJobStatusResponse_Status.COMPLETED,
-      path: 'test.mp3',
+      path: 'file/test.mp3',
     })
 
     renderApp()

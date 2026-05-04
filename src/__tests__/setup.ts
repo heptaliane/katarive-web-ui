@@ -5,6 +5,6 @@ import { vi } from 'vitest'
 vi.stubGlobal('import.meta', {
   env: {
     VITE_GRPC_WEB_URL: '',
-    VITE_AUDIO_BASE_URL: '/file',
+    VITE_AUDIO_BASE_URL: '',
   },
 })
