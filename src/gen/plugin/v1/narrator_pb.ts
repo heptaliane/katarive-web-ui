@@ -8,6 +8,38 @@ import { Message, proto3 } from "@bufbuild/protobuf";
 import { Language } from "./common_pb.js";
 
 /**
+ * @generated from enum plugin.v1.AudioEncoding
+ */
+export enum AudioEncoding {
+  /**
+   * @generated from enum value: AUDIO_ENCODING_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * @generated from enum value: AUDIO_ENCODING_WAV = 1;
+   */
+  WAV = 1,
+
+  /**
+   * @generated from enum value: AUDIO_ENCODING_MP3 = 2;
+   */
+  MP3 = 2,
+
+  /**
+   * @generated from enum value: AUDIO_ENCODING_M4A = 3;
+   */
+  M4A = 3,
+}
+// Retrieve enum metadata with: proto3.getEnumType(AudioEncoding)
+proto3.util.setEnumType(AudioEncoding, "plugin.v1.AudioEncoding", [
+  { no: 0, name: "AUDIO_ENCODING_UNSPECIFIED" },
+  { no: 1, name: "AUDIO_ENCODING_WAV" },
+  { no: 2, name: "AUDIO_ENCODING_MP3" },
+  { no: 3, name: "AUDIO_ENCODING_M4A" },
+]);
+
+/**
  * @generated from message plugin.v1.NarrateRequest
  */
 export class NarrateRequest extends Message<NarrateRequest> {
@@ -27,7 +59,17 @@ export class NarrateRequest extends Message<NarrateRequest> {
   language = Language.UNSPECIFIED;
 
   /**
-   * @generated from field: map<string, string> options = 4;
+   * @generated from field: plugin.v1.AudioEncoding encoding = 4;
+   */
+  encoding = AudioEncoding.UNSPECIFIED;
+
+  /**
+   * @generated from field: int32 speaker_id = 5;
+   */
+  speakerId = 0;
+
+  /**
+   * @generated from field: map<string, string> options = 6;
    */
   options: { [key: string]: string } = {};
 
@@ -42,7 +84,9 @@ export class NarrateRequest extends Message<NarrateRequest> {
     { no: 1, name: "path", kind: "scalar", T: 9 /* ScalarType.STRING */ },
     { no: 2, name: "text", kind: "scalar", T: 9 /* ScalarType.STRING */ },
     { no: 3, name: "language", kind: "enum", T: proto3.getEnumType(Language) },
-    { no: 4, name: "options", kind: "map", K: 9 /* ScalarType.STRING */, V: {kind: "scalar", T: 9 /* ScalarType.STRING */} },
+    { no: 4, name: "encoding", kind: "enum", T: proto3.getEnumType(AudioEncoding) },
+    { no: 5, name: "speaker_id", kind: "scalar", T: 5 /* ScalarType.INT32 */ },
+    { no: 6, name: "options", kind: "map", K: 9 /* ScalarType.STRING */, V: {kind: "scalar", T: 9 /* ScalarType.STRING */} },
   ]);
 
   static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): NarrateRequest {
@@ -151,7 +195,17 @@ export class GetNarratorServiceMetadataResponse extends Message<GetNarratorServi
   version = "";
 
   /**
-   * @generated from field: repeated plugin.v1.NarratorOption options = 3;
+   * @generated from field: repeated plugin.v1.AudioEncoding supported_encoding = 3;
+   */
+  supportedEncoding: AudioEncoding[] = [];
+
+  /**
+   * @generated from field: repeated plugin.v1.SpeakerInfo speakers = 4;
+   */
+  speakers: SpeakerInfo[] = [];
+
+  /**
+   * @generated from field: repeated plugin.v1.NarratorOption options = 5;
    */
   options: NarratorOption[] = [];
 
@@ -165,7 +219,9 @@ export class GetNarratorServiceMetadataResponse extends Message<GetNarratorServi
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
     { no: 1, name: "name", kind: "scalar", T: 9 /* ScalarType.STRING */ },
     { no: 2, name: "version", kind: "scalar", T: 9 /* ScalarType.STRING */ },
-    { no: 3, name: "options", kind: "message", T: NarratorOption, repeated: true },
+    { no: 3, name: "supported_encoding", kind: "enum", T: proto3.getEnumType(AudioEncoding), repeated: true },
+    { no: 4, name: "speakers", kind: "message", T: SpeakerInfo, repeated: true },
+    { no: 5, name: "options", kind: "message", T: NarratorOption, repeated: true },
   ]);
 
   static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetNarratorServiceMetadataResponse {
@@ -231,6 +287,49 @@ export class NarratorOption extends Message<NarratorOption> {
 
   static equals(a: NarratorOption | PlainMessage<NarratorOption> | undefined, b: NarratorOption | PlainMessage<NarratorOption> | undefined): boolean {
     return proto3.util.equals(NarratorOption, a, b);
+  }
+}
+
+/**
+ * @generated from message plugin.v1.SpeakerInfo
+ */
+export class SpeakerInfo extends Message<SpeakerInfo> {
+  /**
+   * @generated from field: int32 id = 1;
+   */
+  id = 0;
+
+  /**
+   * @generated from field: string name = 2;
+   */
+  name = "";
+
+  constructor(data?: PartialMessage<SpeakerInfo>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "plugin.v1.SpeakerInfo";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "id", kind: "scalar", T: 5 /* ScalarType.INT32 */ },
+    { no: 2, name: "name", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): SpeakerInfo {
+    return new SpeakerInfo().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): SpeakerInfo {
+    return new SpeakerInfo().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): SpeakerInfo {
+    return new SpeakerInfo().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: SpeakerInfo | PlainMessage<SpeakerInfo> | undefined, b: SpeakerInfo | PlainMessage<SpeakerInfo> | undefined): boolean {
+    return proto3.util.equals(SpeakerInfo, a, b);
   }
 }
 

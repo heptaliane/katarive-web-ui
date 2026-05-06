@@ -11,10 +11,10 @@ function App() {
   const createNarration = useCreateNarration();
   const { data: jobStatus, error: statusError } = useJobStatus(jobId);
 
-  const handleCreate = (url: string) => {
-    console.log("Starting CreateNarration for:", url);
+  const handleCreate = (url: string, narrator: string, speakerId: number) => {
+    console.log("Starting CreateNarration for:", { url, narrator, speakerId });
     setJobId(null);
-    createNarration.mutate(url, {
+    createNarration.mutate({ url, narrator, speakerId }, {
       onSuccess: (res: any) => {
         console.log("CreateNarration Success:", res);
         setJobId(res.id);

@@ -9,6 +9,7 @@ import { GetJobStatusResponse_Status } from '../gen/api/v1/api_pb'
 const mockClient = {
   createNarration: vi.fn(),
   getJobStatus: vi.fn(),
+  getSpeakers: vi.fn(),
 }
 
 const renderApp = () => {
@@ -25,16 +26,35 @@ const renderApp = () => {
 }
 
 describe('App Flow', () => {
+  const mockSpeakers = [
+    { narrator: 'narrator1', speakerId: 1, speakerLabel: 'Speaker 1' },
+    { narrator: 'narrator2', speakerId: 2, speakerLabel: 'Speaker 2' },
+  ]
+
   beforeEach(() => {
     vi.resetAllMocks()
-    // Default mock behavior
-    mockClient.createNarration.mockResolvedValue({ id: 'test-id' })
+    // Default mock behavior with a small delay to capture loading states
+    mockClient.createNarration.mockImplementation(async () => {
+      await new Promise(resolve => setTimeout(resolve, 50));
+      return { id: 'test-id' };
+    })
+    mockClient.getSpeakers.mockResolvedValue({ speakers: mockSpeakers })
+    mockClient.getJobStatus.mockResolvedValue({
+      status: GetJobStatusResponse_Status.UNSPECIFIED,
+    })
   })
 
-  it('renders the initial state', () => {
+  it('renders the initial state and loads speakers', async () => {
     renderApp()
     expect(screen.getByText('Katarive')).toBeInTheDocument()
-    expect(screen.getByPlaceholderText(/Enter source URL/i)).toBeInTheDocument()
+    expect(screen.getByLabelText(/Source URL/i)).toBeInTheDocument()
+    
+    // Wait for speakers to load
+    await waitFor(() => {
+      expect(screen.getByLabelText(/Select Speaker/i)).toBeInTheDocument()
+    })
+    
+    expect(screen.getByText(/Speaker 1 \(narrator1\)/i)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /Generate Narration/i })).toBeInTheDocument()
   })
 
@@ -46,15 +66,33 @@ describe('App Flow', () => {
     // 2. Second wrap: COMPLETED
     mockClient.getJobStatus.mockResolvedValueOnce({
       status: GetJobStatusResponse_Status.COMPLETED,
-      path: 'file/test.mp3',
+      path: 'test.mp3',
     })
 
     renderApp()
 
-    // Submit URL
-    const input = screen.getByPlaceholderText(/Enter source URL/i)
-    fireEvent.change(input, { target: { value: 'https://test.com' } })
+    // Wait for speakers
+    await waitFor(() => {
+      expect(screen.getByLabelText(/Select Speaker/i)).toBeInTheDocument()
+    })
+
+    // Submit URL and select speaker
+    const urlInput = screen.getByLabelText(/Source URL/i)
+    fireEvent.change(urlInput, { target: { value: 'https://test.com' } })
+    
+    const speakerSelect = screen.getByLabelText(/Select Speaker/i)
+    fireEvent.change(speakerSelect, { target: { value: '1' } }) // Select Speaker 2
+
     fireEvent.click(screen.getByRole('button', { name: /Generate Narration/i }))
+
+    // Verify createNarration called with correct params
+    await waitFor(() => {
+      expect(mockClient.createNarration).toHaveBeenCalledWith({
+        url: 'https://test.com',
+        narrator: 'narrator2',
+        speakerId: 2,
+      })
+    })
 
     // Verify status card appears as Progressing
     await waitFor(() => {
@@ -79,13 +117,19 @@ describe('App Flow', () => {
 
     renderApp()
 
-    fireEvent.change(screen.getByPlaceholderText(/Enter source URL/i), {
+    await waitFor(() => {
+      expect(screen.getByLabelText(/Select Speaker/i)).toBeInTheDocument()
+    })
+
+    fireEvent.change(screen.getByLabelText(/Source URL/i), {
       target: { value: 'https://test.com' },
     })
     fireEvent.click(screen.getByRole('button', { name: /Generate Narration/i }))
 
+    // Verify loading/disabled state
     await waitFor(() => {
-      expect(screen.getByRole('button')).toBeDisabled()
+      const button = screen.getByRole('button')
+      expect(button).toBeDisabled()
     })
   })
 })

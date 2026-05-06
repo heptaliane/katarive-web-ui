@@ -3,7 +3,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { CreateNarrationRequest, CreateNarrationResponse, GetJobStatusRequest, GetJobStatusResponse } from "./api_pb.js";
+import { CreateNarrationRequest, CreateNarrationResponse, GetJobStatusRequest, GetJobStatusResponse, GetSpeakersRequest, GetSpeakersResponse } from "./api_pb.js";
 import { MethodKind } from "@bufbuild/protobuf";
 
 /**
@@ -28,6 +28,15 @@ export const KatariveService = {
       name: "GetJobStatus",
       I: GetJobStatusRequest,
       O: GetJobStatusResponse,
+      kind: MethodKind.Unary,
+    },
+    /**
+     * @generated from rpc api.v1.KatariveService.GetSpeakers
+     */
+    getSpeakers: {
+      name: "GetSpeakers",
+      I: GetSpeakersRequest,
+      O: GetSpeakersResponse,
       kind: MethodKind.Unary,
     },
   }

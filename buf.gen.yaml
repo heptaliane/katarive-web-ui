@@ -9,5 +9,4 @@ plugins:
     opt:
       - target=ts
 inputs:
-  - git_repo: https://github.com/heptaliane/katarive-proto.git
-    branch: main
+  - directory: ../katarive-proto
