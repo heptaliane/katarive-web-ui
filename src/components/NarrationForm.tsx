@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { useGetSpeakers } from "../hooks/useGetSpeakers";
-import { Speaker } from "../gen/api/v1/api_pb";
+import { useState, useMemo } from "react";
+import { useGetNarrators } from "../hooks/useGetNarrators";
+import { Narrator, Speaker } from "../gen/api/v1/api_pb";
 
 interface Props {
   onSubmit: (url: string, narrator: string, speakerId: number) => void;
@@ -8,18 +8,42 @@ interface Props {
   disabled: boolean;
 }
 
+interface FlattenedSpeaker {
+  narratorName: string;
+  speakerId: number;
+  speakerLabel: string;
+  key: string;
+}
+
 export const NarrationForm = ({ onSubmit, isLoading, disabled }: Props) => {
   const [url, setUrl] = useState("");
-  const { data: speakersData, isLoading: isSpeakersLoading } = useGetSpeakers();
-  const [selectedSpeakerIndex, setSelectedSpeakerIndex] = useState<number>(0);
+  const { data: narratorsData, isLoading: isNarratorsLoading } = useGetNarrators();
+  const [selectedSpeakerKey, setSelectedSpeakerKey] = useState<string>("");
 
-  const speakers: Speaker[] = speakersData?.speakers || [];
+  const flattenedSpeakers = useMemo<FlattenedSpeaker[]>(() => {
+    if (!narratorsData?.narrator) return [];
+    return narratorsData.narrator.flatMap((n: Narrator) => 
+      n.speakers.map((s: Speaker) => ({
+        narratorName: n.name,
+        speakerId: s.id,
+        speakerLabel: s.label,
+        key: `${n.name}-${s.id}`
+      }))
+    );
+  }, [narratorsData]);
+
+  // Set default selection when speakers are loaded
+  useMemo(() => {
+    if (flattenedSpeakers.length > 0 && !selectedSpeakerKey) {
+      setSelectedSpeakerKey(flattenedSpeakers[0].key);
+    }
+  }, [flattenedSpeakers, selectedSpeakerKey]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const speaker = speakers[selectedSpeakerIndex];
+    const speaker = flattenedSpeakers.find(s => s.key === selectedSpeakerKey);
     if (url.trim() && speaker) {
-      onSubmit(url.trim(), speaker.narrator, speaker.speakerId);
+      onSubmit(url.trim(), speaker.narratorName, speaker.speakerId);
     }
   };
 
@@ -39,21 +63,21 @@ export const NarrationForm = ({ onSubmit, isLoading, disabled }: Props) => {
 
       <div className="input-group">
         <label htmlFor="speaker-select">Select Speaker</label>
-        {isSpeakersLoading ? (
+        {isNarratorsLoading ? (
           <div className="loading-text">Loading speakers...</div>
         ) : (
           <select
             id="speaker-select"
-            value={selectedSpeakerIndex}
-            onChange={(e) => setSelectedSpeakerIndex(Number(e.target.value))}
-            disabled={disabled || speakers.length === 0}
+            value={selectedSpeakerKey}
+            onChange={(e) => setSelectedSpeakerKey(e.target.value)}
+            disabled={disabled || flattenedSpeakers.length === 0}
           >
-            {speakers.map((speaker: Speaker, index: number) => (
-              <option key={`${speaker.narrator}-${speaker.speakerId}`} value={index}>
-                {speaker.speakerLabel} ({speaker.narrator})
+            {flattenedSpeakers.map((s) => (
+              <option key={s.key} value={s.key}>
+                {s.speakerLabel} ({s.narratorName})
               </option>
             ))}
-            {speakers.length === 0 && <option>No speakers available</option>}
+            {flattenedSpeakers.length === 0 && <option>No speakers available</option>}
           </select>
         )}
       </div>
@@ -61,7 +85,7 @@ export const NarrationForm = ({ onSubmit, isLoading, disabled }: Props) => {
       <button 
         type="submit" 
         className="generate-button"
-        disabled={disabled || !url.trim() || isLoading || speakers.length === 0}
+        disabled={disabled || !url.trim() || isLoading || flattenedSpeakers.length === 0}
       >
         {isLoading ? (
           <>

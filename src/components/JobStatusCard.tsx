@@ -1,19 +1,19 @@
-import { GetJobStatusResponse_Status } from "../gen/api/v1/api_pb";
+import { JobStatus } from "../gen/api/v1/api_pb";
 
 interface Props {
-  status: GetJobStatusResponse_Status;
+  status: JobStatus;
 }
 
 export const JobStatusCard = ({ status }: Props) => {
   const getStatusText = () => {
     switch (status) {
-      case GetJobStatusResponse_Status.PROGRESSING:
+      case JobStatus.PROGRESSING:
         return { text: "Progressing", class: "status-progressing" };
-      case GetJobStatusResponse_Status.COMPLETED:
+      case JobStatus.COMPLETED:
         return { text: "Success", class: "status-completed" };
-      case GetJobStatusResponse_Status.FAILED:
+      case JobStatus.FAILED:
         return { text: "Failed", class: "status-failed" };
-      case GetJobStatusResponse_Status.NOT_FOUND:
+      case JobStatus.NOT_FOUND:
         return { text: "Not Found", class: "status-failed" };
       default:
         return { text: "Unknown", class: "" };

@@ -1,26 +1,26 @@
 import { useState } from "react";
-import { useCreateNarration } from "./hooks/useCreateNarration";
+import { useQueueNarration } from "./hooks/useQueueNarration";
 import { useJobStatus } from "./hooks/useJobStatus";
 import { NarrationForm } from "./components/NarrationForm";
 import { JobStatusCard } from "./components/JobStatusCard";
 import { AudioPlayer } from "./components/AudioPlayer";
-import { GetJobStatusResponse_Status } from "./gen/api/v1/api_pb";
+import { JobStatus } from "./gen/api/v1/api_pb";
 
 function App() {
   const [jobId, setJobId] = useState<string | null>(null);
-  const createNarration = useCreateNarration();
+  const queueNarration = useQueueNarration();
   const { data: jobStatus, error: statusError } = useJobStatus(jobId);
 
   const handleCreate = (url: string, narrator: string, speakerId: number) => {
-    console.log("Starting CreateNarration for:", { url, narrator, speakerId });
+    console.log("Starting QueueNarration for:", { url, narrator, speakerId });
     setJobId(null);
-    createNarration.mutate({ url, narrator, speakerId }, {
+    queueNarration.mutate({ url, narrator, speakerId }, {
       onSuccess: (res: any) => {
-        console.log("CreateNarration Success:", res);
+        console.log("QueueNarration Success:", res);
         setJobId(res.id);
       },
       onError: (err) => {
-        console.error("CreateNarration Error:", err);
+        console.error("QueueNarration Error:", err);
       }
     });
   };
@@ -32,13 +32,13 @@ function App() {
 
   // Log polling errors if they occur
   if (statusError) {
-    console.error("GetJobStatus Polling Error:", statusError);
+    console.error("GetNarration Polling Error:", statusError);
   }
 
-  const isProgressing = jobStatus?.status === GetJobStatusResponse_Status.PROGRESSING;
-  const isCompleted = jobStatus?.status === GetJobStatusResponse_Status.COMPLETED;
-  const isFailed = jobStatus?.status === GetJobStatusResponse_Status.FAILED || 
-                 jobStatus?.status === GetJobStatusResponse_Status.NOT_FOUND;
+  const isProgressing = jobStatus?.status === JobStatus.PROGRESSING;
+  const isCompleted = jobStatus?.status === JobStatus.COMPLETED;
+  const isFailed = jobStatus?.status === JobStatus.FAILED || 
+                 jobStatus?.status === JobStatus.NOT_FOUND;
 
   return (
     <div className="card">
@@ -49,13 +49,13 @@ function App() {
 
       <NarrationForm 
         onSubmit={handleCreate} 
-        isLoading={createNarration.isPending} 
+        isLoading={queueNarration.isPending} 
         disabled={isProgressing}
       />
 
-      {createNarration.isError && (
+      {queueNarration.isError && (
         <p className="status-failed" style={{ marginTop: '1rem', padding: '0.5rem', borderRadius: '8px' }}>
-          Failed to start job: {createNarration.error.message}
+          Failed to start job: {queueNarration.error.message}
         </p>
       )}
 

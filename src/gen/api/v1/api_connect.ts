@@ -3,7 +3,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { CreateNarrationRequest, CreateNarrationResponse, GetJobStatusRequest, GetJobStatusResponse, GetSpeakersRequest, GetSpeakersResponse } from "./api_pb.js";
+import { GetNarrationRequest, GetNarrationResponse, GetNarratorsRequest, GetNarratorsResponse, GetSourceCollectionRequest, GetSourceCollectionResponse, GetSourceItemRequest, GetSourceItemResponse, QueueNarrationRequest, QueueNarrationResponse, QueueSourceCollectionRequest, QueueSourceCollectionResponse, QueueSourceItemRequest, QueueSourceItemResponse } from "./api_pb.js";
 import { MethodKind } from "@bufbuild/protobuf";
 
 /**
@@ -13,30 +13,66 @@ export const KatariveService = {
   typeName: "api.v1.KatariveService",
   methods: {
     /**
-     * @generated from rpc api.v1.KatariveService.CreateNarration
+     * @generated from rpc api.v1.KatariveService.QueueNarration
      */
-    createNarration: {
-      name: "CreateNarration",
-      I: CreateNarrationRequest,
-      O: CreateNarrationResponse,
+    queueNarration: {
+      name: "QueueNarration",
+      I: QueueNarrationRequest,
+      O: QueueNarrationResponse,
       kind: MethodKind.Unary,
     },
     /**
-     * @generated from rpc api.v1.KatariveService.GetJobStatus
+     * @generated from rpc api.v1.KatariveService.GetNarration
      */
-    getJobStatus: {
-      name: "GetJobStatus",
-      I: GetJobStatusRequest,
-      O: GetJobStatusResponse,
+    getNarration: {
+      name: "GetNarration",
+      I: GetNarrationRequest,
+      O: GetNarrationResponse,
       kind: MethodKind.Unary,
     },
     /**
-     * @generated from rpc api.v1.KatariveService.GetSpeakers
+     * @generated from rpc api.v1.KatariveService.GetNarrators
      */
-    getSpeakers: {
-      name: "GetSpeakers",
-      I: GetSpeakersRequest,
-      O: GetSpeakersResponse,
+    getNarrators: {
+      name: "GetNarrators",
+      I: GetNarratorsRequest,
+      O: GetNarratorsResponse,
+      kind: MethodKind.Unary,
+    },
+    /**
+     * @generated from rpc api.v1.KatariveService.QueueSourceItem
+     */
+    queueSourceItem: {
+      name: "QueueSourceItem",
+      I: QueueSourceItemRequest,
+      O: QueueSourceItemResponse,
+      kind: MethodKind.Unary,
+    },
+    /**
+     * @generated from rpc api.v1.KatariveService.GetSourceItem
+     */
+    getSourceItem: {
+      name: "GetSourceItem",
+      I: GetSourceItemRequest,
+      O: GetSourceItemResponse,
+      kind: MethodKind.Unary,
+    },
+    /**
+     * @generated from rpc api.v1.KatariveService.QueueSourceCollection
+     */
+    queueSourceCollection: {
+      name: "QueueSourceCollection",
+      I: QueueSourceCollectionRequest,
+      O: QueueSourceCollectionResponse,
+      kind: MethodKind.Unary,
+    },
+    /**
+     * @generated from rpc api.v1.KatariveService.GetSourceCollection
+     */
+    getSourceCollection: {
+      name: "GetSourceCollection",
+      I: GetSourceCollectionRequest,
+      O: GetSourceCollectionResponse,
       kind: MethodKind.Unary,
     },
   }

@@ -3,7 +3,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { GetSourceRequest, GetSourceResponse, GetSourceServiceMetadataRequest, GetSourceServiceMetadataResponse } from "./source_pb.js";
+import { GetSourceCollectionRequest, GetSourceCollectionResponse, GetSourceItemRequest, GetSourceItemResponse, GetSourceServiceMetadataRequest, GetSourceServiceMetadataResponse } from "./source_pb.js";
 import { MethodKind } from "@bufbuild/protobuf";
 
 /**
@@ -13,21 +13,30 @@ export const SourceService = {
   typeName: "plugin.v1.SourceService",
   methods: {
     /**
-     * @generated from rpc plugin.v1.SourceService.GetSource
-     */
-    getSource: {
-      name: "GetSource",
-      I: GetSourceRequest,
-      O: GetSourceResponse,
-      kind: MethodKind.Unary,
-    },
-    /**
      * @generated from rpc plugin.v1.SourceService.GetSourceServiceMetadata
      */
     getSourceServiceMetadata: {
       name: "GetSourceServiceMetadata",
       I: GetSourceServiceMetadataRequest,
       O: GetSourceServiceMetadataResponse,
+      kind: MethodKind.Unary,
+    },
+    /**
+     * @generated from rpc plugin.v1.SourceService.GetSourceItem
+     */
+    getSourceItem: {
+      name: "GetSourceItem",
+      I: GetSourceItemRequest,
+      O: GetSourceItemResponse,
+      kind: MethodKind.Unary,
+    },
+    /**
+     * @generated from rpc plugin.v1.SourceService.GetSourceCollection
+     */
+    getSourceCollection: {
+      name: "GetSourceCollection",
+      I: GetSourceCollectionRequest,
+      O: GetSourceCollectionResponse,
       kind: MethodKind.Unary,
     },
   }

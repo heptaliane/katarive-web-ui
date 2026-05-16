@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { useClient } from "../context";
 
-export const useGetSpeakers = () => {
+export const useGetNarrators = () => {
   const client = useClient();
   return useQuery({
-    queryKey: ["speakers"],
-    queryFn: () => client.getSpeakers({}),
+    queryKey: ["narrators"],
+    queryFn: () => client.getNarrators({}),
   });
 };

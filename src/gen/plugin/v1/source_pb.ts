@@ -8,98 +8,6 @@ import { Message, proto3 } from "@bufbuild/protobuf";
 import { Language } from "./common_pb.js";
 
 /**
- * @generated from message plugin.v1.GetSourceRequest
- */
-export class GetSourceRequest extends Message<GetSourceRequest> {
-  /**
-   * @generated from field: string url = 1;
-   */
-  url = "";
-
-  constructor(data?: PartialMessage<GetSourceRequest>) {
-    super();
-    proto3.util.initPartial(data, this);
-  }
-
-  static readonly runtime: typeof proto3 = proto3;
-  static readonly typeName = "plugin.v1.GetSourceRequest";
-  static readonly fields: FieldList = proto3.util.newFieldList(() => [
-    { no: 1, name: "url", kind: "scalar", T: 9 /* ScalarType.STRING */ },
-  ]);
-
-  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetSourceRequest {
-    return new GetSourceRequest().fromBinary(bytes, options);
-  }
-
-  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetSourceRequest {
-    return new GetSourceRequest().fromJson(jsonValue, options);
-  }
-
-  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetSourceRequest {
-    return new GetSourceRequest().fromJsonString(jsonString, options);
-  }
-
-  static equals(a: GetSourceRequest | PlainMessage<GetSourceRequest> | undefined, b: GetSourceRequest | PlainMessage<GetSourceRequest> | undefined): boolean {
-    return proto3.util.equals(GetSourceRequest, a, b);
-  }
-}
-
-/**
- * @generated from message plugin.v1.GetSourceResponse
- */
-export class GetSourceResponse extends Message<GetSourceResponse> {
-  /**
-   * @generated from field: string title = 1;
-   */
-  title = "";
-
-  /**
-   * @generated from field: string content = 2;
-   */
-  content = "";
-
-  /**
-   * @generated from field: plugin.v1.Language language = 3;
-   */
-  language = Language.UNSPECIFIED;
-
-  /**
-   * @generated from field: string next_url = 4;
-   */
-  nextUrl = "";
-
-  constructor(data?: PartialMessage<GetSourceResponse>) {
-    super();
-    proto3.util.initPartial(data, this);
-  }
-
-  static readonly runtime: typeof proto3 = proto3;
-  static readonly typeName = "plugin.v1.GetSourceResponse";
-  static readonly fields: FieldList = proto3.util.newFieldList(() => [
-    { no: 1, name: "title", kind: "scalar", T: 9 /* ScalarType.STRING */ },
-    { no: 2, name: "content", kind: "scalar", T: 9 /* ScalarType.STRING */ },
-    { no: 3, name: "language", kind: "enum", T: proto3.getEnumType(Language) },
-    { no: 4, name: "next_url", kind: "scalar", T: 9 /* ScalarType.STRING */ },
-  ]);
-
-  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetSourceResponse {
-    return new GetSourceResponse().fromBinary(bytes, options);
-  }
-
-  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetSourceResponse {
-    return new GetSourceResponse().fromJson(jsonValue, options);
-  }
-
-  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetSourceResponse {
-    return new GetSourceResponse().fromJsonString(jsonString, options);
-  }
-
-  static equals(a: GetSourceResponse | PlainMessage<GetSourceResponse> | undefined, b: GetSourceResponse | PlainMessage<GetSourceResponse> | undefined): boolean {
-    return proto3.util.equals(GetSourceResponse, a, b);
-  }
-}
-
-/**
  * @generated from message plugin.v1.GetSourceServiceMetadataRequest
  */
 export class GetSourceServiceMetadataRequest extends Message<GetSourceServiceMetadataRequest> {
@@ -176,6 +84,343 @@ export class GetSourceServiceMetadataResponse extends Message<GetSourceServiceMe
 
   static equals(a: GetSourceServiceMetadataResponse | PlainMessage<GetSourceServiceMetadataResponse> | undefined, b: GetSourceServiceMetadataResponse | PlainMessage<GetSourceServiceMetadataResponse> | undefined): boolean {
     return proto3.util.equals(GetSourceServiceMetadataResponse, a, b);
+  }
+}
+
+/**
+ * @generated from message plugin.v1.GetSourceItemRequest
+ */
+export class GetSourceItemRequest extends Message<GetSourceItemRequest> {
+  /**
+   * @generated from field: string url = 1;
+   */
+  url = "";
+
+  constructor(data?: PartialMessage<GetSourceItemRequest>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "plugin.v1.GetSourceItemRequest";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "url", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetSourceItemRequest {
+    return new GetSourceItemRequest().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetSourceItemRequest {
+    return new GetSourceItemRequest().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetSourceItemRequest {
+    return new GetSourceItemRequest().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: GetSourceItemRequest | PlainMessage<GetSourceItemRequest> | undefined, b: GetSourceItemRequest | PlainMessage<GetSourceItemRequest> | undefined): boolean {
+    return proto3.util.equals(GetSourceItemRequest, a, b);
+  }
+}
+
+/**
+ * @generated from message plugin.v1.GetSourceItemResponse
+ */
+export class GetSourceItemResponse extends Message<GetSourceItemResponse> {
+  /**
+   * @generated from field: plugin.v1.SourceItem item = 1;
+   */
+  item?: SourceItem;
+
+  constructor(data?: PartialMessage<GetSourceItemResponse>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "plugin.v1.GetSourceItemResponse";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "item", kind: "message", T: SourceItem },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetSourceItemResponse {
+    return new GetSourceItemResponse().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetSourceItemResponse {
+    return new GetSourceItemResponse().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetSourceItemResponse {
+    return new GetSourceItemResponse().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: GetSourceItemResponse | PlainMessage<GetSourceItemResponse> | undefined, b: GetSourceItemResponse | PlainMessage<GetSourceItemResponse> | undefined): boolean {
+    return proto3.util.equals(GetSourceItemResponse, a, b);
+  }
+}
+
+/**
+ * @generated from message plugin.v1.GetSourceCollectionRequest
+ */
+export class GetSourceCollectionRequest extends Message<GetSourceCollectionRequest> {
+  /**
+   * @generated from field: string url = 1;
+   */
+  url = "";
+
+  constructor(data?: PartialMessage<GetSourceCollectionRequest>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "plugin.v1.GetSourceCollectionRequest";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "url", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetSourceCollectionRequest {
+    return new GetSourceCollectionRequest().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetSourceCollectionRequest {
+    return new GetSourceCollectionRequest().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetSourceCollectionRequest {
+    return new GetSourceCollectionRequest().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: GetSourceCollectionRequest | PlainMessage<GetSourceCollectionRequest> | undefined, b: GetSourceCollectionRequest | PlainMessage<GetSourceCollectionRequest> | undefined): boolean {
+    return proto3.util.equals(GetSourceCollectionRequest, a, b);
+  }
+}
+
+/**
+ * @generated from message plugin.v1.GetSourceCollectionResponse
+ */
+export class GetSourceCollectionResponse extends Message<GetSourceCollectionResponse> {
+  /**
+   * @generated from field: optional plugin.v1.SourceCollection collection = 1;
+   */
+  collection?: SourceCollection;
+
+  /**
+   * @generated from field: repeated plugin.v1.SourceSummary sources = 2;
+   */
+  sources: SourceSummary[] = [];
+
+  constructor(data?: PartialMessage<GetSourceCollectionResponse>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "plugin.v1.GetSourceCollectionResponse";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "collection", kind: "message", T: SourceCollection, opt: true },
+    { no: 2, name: "sources", kind: "message", T: SourceSummary, repeated: true },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetSourceCollectionResponse {
+    return new GetSourceCollectionResponse().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetSourceCollectionResponse {
+    return new GetSourceCollectionResponse().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetSourceCollectionResponse {
+    return new GetSourceCollectionResponse().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: GetSourceCollectionResponse | PlainMessage<GetSourceCollectionResponse> | undefined, b: GetSourceCollectionResponse | PlainMessage<GetSourceCollectionResponse> | undefined): boolean {
+    return proto3.util.equals(GetSourceCollectionResponse, a, b);
+  }
+}
+
+/**
+ * @generated from message plugin.v1.SourceItem
+ */
+export class SourceItem extends Message<SourceItem> {
+  /**
+   * @generated from field: string id = 1;
+   */
+  id = "";
+
+  /**
+   * @generated from field: optional string collection_id = 2;
+   */
+  collectionId?: string;
+
+  /**
+   * @generated from field: string url = 3;
+   */
+  url = "";
+
+  /**
+   * @generated from field: string title = 4;
+   */
+  title = "";
+
+  /**
+   * @generated from field: string content = 5;
+   */
+  content = "";
+
+  /**
+   * @generated from field: plugin.v1.Language language = 6;
+   */
+  language = Language.UNSPECIFIED;
+
+  constructor(data?: PartialMessage<SourceItem>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "plugin.v1.SourceItem";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "id", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 2, name: "collection_id", kind: "scalar", T: 9 /* ScalarType.STRING */, opt: true },
+    { no: 3, name: "url", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 4, name: "title", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 5, name: "content", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 6, name: "language", kind: "enum", T: proto3.getEnumType(Language) },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): SourceItem {
+    return new SourceItem().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): SourceItem {
+    return new SourceItem().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): SourceItem {
+    return new SourceItem().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: SourceItem | PlainMessage<SourceItem> | undefined, b: SourceItem | PlainMessage<SourceItem> | undefined): boolean {
+    return proto3.util.equals(SourceItem, a, b);
+  }
+}
+
+/**
+ * @generated from message plugin.v1.SourceSummary
+ */
+export class SourceSummary extends Message<SourceSummary> {
+  /**
+   * @generated from field: string id = 1;
+   */
+  id = "";
+
+  /**
+   * @generated from field: string url = 2;
+   */
+  url = "";
+
+  /**
+   * @generated from field: string title = 3;
+   */
+  title = "";
+
+  constructor(data?: PartialMessage<SourceSummary>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "plugin.v1.SourceSummary";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "id", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 2, name: "url", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 3, name: "title", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): SourceSummary {
+    return new SourceSummary().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): SourceSummary {
+    return new SourceSummary().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): SourceSummary {
+    return new SourceSummary().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: SourceSummary | PlainMessage<SourceSummary> | undefined, b: SourceSummary | PlainMessage<SourceSummary> | undefined): boolean {
+    return proto3.util.equals(SourceSummary, a, b);
+  }
+}
+
+/**
+ * @generated from message plugin.v1.SourceCollection
+ */
+export class SourceCollection extends Message<SourceCollection> {
+  /**
+   * @generated from field: string id = 1;
+   */
+  id = "";
+
+  /**
+   * @generated from field: string url = 2;
+   */
+  url = "";
+
+  /**
+   * @generated from field: string title = 3;
+   */
+  title = "";
+
+  /**
+   * @generated from field: string description = 4;
+   */
+  description = "";
+
+  /**
+   * @generated from field: string author = 5;
+   */
+  author = "";
+
+  /**
+   * @generated from field: repeated string tags = 6;
+   */
+  tags: string[] = [];
+
+  constructor(data?: PartialMessage<SourceCollection>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "plugin.v1.SourceCollection";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "id", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 2, name: "url", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 3, name: "title", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 4, name: "description", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 5, name: "author", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 6, name: "tags", kind: "scalar", T: 9 /* ScalarType.STRING */, repeated: true },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): SourceCollection {
+    return new SourceCollection().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): SourceCollection {
+    return new SourceCollection().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): SourceCollection {
+    return new SourceCollection().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: SourceCollection | PlainMessage<SourceCollection> | undefined, b: SourceCollection | PlainMessage<SourceCollection> | undefined): boolean {
+    return proto3.util.equals(SourceCollection, a, b);
   }
 }
 

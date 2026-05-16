@@ -7,9 +7,47 @@ import type { BinaryReadOptions, FieldList, JsonReadOptions, JsonValue, PartialM
 import { Message, proto3 } from "@bufbuild/protobuf";
 
 /**
- * @generated from message api.v1.CreateNarrationRequest
+ * @generated from enum api.v1.JobStatus
  */
-export class CreateNarrationRequest extends Message<CreateNarrationRequest> {
+export enum JobStatus {
+  /**
+   * @generated from enum value: JOB_STATUS_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * @generated from enum value: JOB_STATUS_PROGRESSING = 1;
+   */
+  PROGRESSING = 1,
+
+  /**
+   * @generated from enum value: JOB_STATUS_COMPLETED = 2;
+   */
+  COMPLETED = 2,
+
+  /**
+   * @generated from enum value: JOB_STATUS_FAILED = 3;
+   */
+  FAILED = 3,
+
+  /**
+   * @generated from enum value: JOB_STATUS_NOT_FOUND = 4;
+   */
+  NOT_FOUND = 4,
+}
+// Retrieve enum metadata with: proto3.getEnumType(JobStatus)
+proto3.util.setEnumType(JobStatus, "api.v1.JobStatus", [
+  { no: 0, name: "JOB_STATUS_UNSPECIFIED" },
+  { no: 1, name: "JOB_STATUS_PROGRESSING" },
+  { no: 2, name: "JOB_STATUS_COMPLETED" },
+  { no: 3, name: "JOB_STATUS_FAILED" },
+  { no: 4, name: "JOB_STATUS_NOT_FOUND" },
+]);
+
+/**
+ * @generated from message api.v1.QueueNarrationRequest
+ */
+export class QueueNarrationRequest extends Message<QueueNarrationRequest> {
   /**
    * @generated from field: string url = 1;
    */
@@ -25,256 +63,261 @@ export class CreateNarrationRequest extends Message<CreateNarrationRequest> {
    */
   speakerId = 0;
 
-  constructor(data?: PartialMessage<CreateNarrationRequest>) {
+  constructor(data?: PartialMessage<QueueNarrationRequest>) {
     super();
     proto3.util.initPartial(data, this);
   }
 
   static readonly runtime: typeof proto3 = proto3;
-  static readonly typeName = "api.v1.CreateNarrationRequest";
+  static readonly typeName = "api.v1.QueueNarrationRequest";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
     { no: 1, name: "url", kind: "scalar", T: 9 /* ScalarType.STRING */ },
     { no: 2, name: "narrator", kind: "scalar", T: 9 /* ScalarType.STRING */ },
     { no: 3, name: "speaker_id", kind: "scalar", T: 5 /* ScalarType.INT32 */ },
   ]);
 
-  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): CreateNarrationRequest {
-    return new CreateNarrationRequest().fromBinary(bytes, options);
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): QueueNarrationRequest {
+    return new QueueNarrationRequest().fromBinary(bytes, options);
   }
 
-  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): CreateNarrationRequest {
-    return new CreateNarrationRequest().fromJson(jsonValue, options);
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): QueueNarrationRequest {
+    return new QueueNarrationRequest().fromJson(jsonValue, options);
   }
 
-  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): CreateNarrationRequest {
-    return new CreateNarrationRequest().fromJsonString(jsonString, options);
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): QueueNarrationRequest {
+    return new QueueNarrationRequest().fromJsonString(jsonString, options);
   }
 
-  static equals(a: CreateNarrationRequest | PlainMessage<CreateNarrationRequest> | undefined, b: CreateNarrationRequest | PlainMessage<CreateNarrationRequest> | undefined): boolean {
-    return proto3.util.equals(CreateNarrationRequest, a, b);
+  static equals(a: QueueNarrationRequest | PlainMessage<QueueNarrationRequest> | undefined, b: QueueNarrationRequest | PlainMessage<QueueNarrationRequest> | undefined): boolean {
+    return proto3.util.equals(QueueNarrationRequest, a, b);
   }
 }
 
 /**
- * @generated from message api.v1.CreateNarrationResponse
+ * @generated from message api.v1.QueueNarrationResponse
  */
-export class CreateNarrationResponse extends Message<CreateNarrationResponse> {
+export class QueueNarrationResponse extends Message<QueueNarrationResponse> {
   /**
    * @generated from field: string id = 1;
    */
   id = "";
 
-  constructor(data?: PartialMessage<CreateNarrationResponse>) {
+  constructor(data?: PartialMessage<QueueNarrationResponse>) {
     super();
     proto3.util.initPartial(data, this);
   }
 
   static readonly runtime: typeof proto3 = proto3;
-  static readonly typeName = "api.v1.CreateNarrationResponse";
+  static readonly typeName = "api.v1.QueueNarrationResponse";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
     { no: 1, name: "id", kind: "scalar", T: 9 /* ScalarType.STRING */ },
   ]);
 
-  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): CreateNarrationResponse {
-    return new CreateNarrationResponse().fromBinary(bytes, options);
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): QueueNarrationResponse {
+    return new QueueNarrationResponse().fromBinary(bytes, options);
   }
 
-  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): CreateNarrationResponse {
-    return new CreateNarrationResponse().fromJson(jsonValue, options);
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): QueueNarrationResponse {
+    return new QueueNarrationResponse().fromJson(jsonValue, options);
   }
 
-  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): CreateNarrationResponse {
-    return new CreateNarrationResponse().fromJsonString(jsonString, options);
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): QueueNarrationResponse {
+    return new QueueNarrationResponse().fromJsonString(jsonString, options);
   }
 
-  static equals(a: CreateNarrationResponse | PlainMessage<CreateNarrationResponse> | undefined, b: CreateNarrationResponse | PlainMessage<CreateNarrationResponse> | undefined): boolean {
-    return proto3.util.equals(CreateNarrationResponse, a, b);
+  static equals(a: QueueNarrationResponse | PlainMessage<QueueNarrationResponse> | undefined, b: QueueNarrationResponse | PlainMessage<QueueNarrationResponse> | undefined): boolean {
+    return proto3.util.equals(QueueNarrationResponse, a, b);
   }
 }
 
 /**
- * @generated from message api.v1.GetJobStatusRequest
+ * @generated from message api.v1.GetNarrationRequest
  */
-export class GetJobStatusRequest extends Message<GetJobStatusRequest> {
+export class GetNarrationRequest extends Message<GetNarrationRequest> {
   /**
    * @generated from field: string id = 1;
    */
   id = "";
 
-  constructor(data?: PartialMessage<GetJobStatusRequest>) {
+  constructor(data?: PartialMessage<GetNarrationRequest>) {
     super();
     proto3.util.initPartial(data, this);
   }
 
   static readonly runtime: typeof proto3 = proto3;
-  static readonly typeName = "api.v1.GetJobStatusRequest";
+  static readonly typeName = "api.v1.GetNarrationRequest";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
     { no: 1, name: "id", kind: "scalar", T: 9 /* ScalarType.STRING */ },
   ]);
 
-  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetJobStatusRequest {
-    return new GetJobStatusRequest().fromBinary(bytes, options);
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetNarrationRequest {
+    return new GetNarrationRequest().fromBinary(bytes, options);
   }
 
-  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetJobStatusRequest {
-    return new GetJobStatusRequest().fromJson(jsonValue, options);
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetNarrationRequest {
+    return new GetNarrationRequest().fromJson(jsonValue, options);
   }
 
-  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetJobStatusRequest {
-    return new GetJobStatusRequest().fromJsonString(jsonString, options);
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetNarrationRequest {
+    return new GetNarrationRequest().fromJsonString(jsonString, options);
   }
 
-  static equals(a: GetJobStatusRequest | PlainMessage<GetJobStatusRequest> | undefined, b: GetJobStatusRequest | PlainMessage<GetJobStatusRequest> | undefined): boolean {
-    return proto3.util.equals(GetJobStatusRequest, a, b);
+  static equals(a: GetNarrationRequest | PlainMessage<GetNarrationRequest> | undefined, b: GetNarrationRequest | PlainMessage<GetNarrationRequest> | undefined): boolean {
+    return proto3.util.equals(GetNarrationRequest, a, b);
   }
 }
 
 /**
- * @generated from message api.v1.GetJobStatusResponse
+ * @generated from message api.v1.GetNarrationResponse
  */
-export class GetJobStatusResponse extends Message<GetJobStatusResponse> {
+export class GetNarrationResponse extends Message<GetNarrationResponse> {
   /**
-   * @generated from field: api.v1.GetJobStatusResponse.Status status = 1;
+   * @generated from field: api.v1.JobStatus status = 1;
    */
-  status = GetJobStatusResponse_Status.UNSPECIFIED;
+  status = JobStatus.UNSPECIFIED;
 
   /**
    * @generated from field: optional string path = 2;
    */
   path?: string;
 
-  constructor(data?: PartialMessage<GetJobStatusResponse>) {
+  constructor(data?: PartialMessage<GetNarrationResponse>) {
     super();
     proto3.util.initPartial(data, this);
   }
 
   static readonly runtime: typeof proto3 = proto3;
-  static readonly typeName = "api.v1.GetJobStatusResponse";
+  static readonly typeName = "api.v1.GetNarrationResponse";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
-    { no: 1, name: "status", kind: "enum", T: proto3.getEnumType(GetJobStatusResponse_Status) },
+    { no: 1, name: "status", kind: "enum", T: proto3.getEnumType(JobStatus) },
     { no: 2, name: "path", kind: "scalar", T: 9 /* ScalarType.STRING */, opt: true },
   ]);
 
-  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetJobStatusResponse {
-    return new GetJobStatusResponse().fromBinary(bytes, options);
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetNarrationResponse {
+    return new GetNarrationResponse().fromBinary(bytes, options);
   }
 
-  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetJobStatusResponse {
-    return new GetJobStatusResponse().fromJson(jsonValue, options);
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetNarrationResponse {
+    return new GetNarrationResponse().fromJson(jsonValue, options);
   }
 
-  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetJobStatusResponse {
-    return new GetJobStatusResponse().fromJsonString(jsonString, options);
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetNarrationResponse {
+    return new GetNarrationResponse().fromJsonString(jsonString, options);
   }
 
-  static equals(a: GetJobStatusResponse | PlainMessage<GetJobStatusResponse> | undefined, b: GetJobStatusResponse | PlainMessage<GetJobStatusResponse> | undefined): boolean {
-    return proto3.util.equals(GetJobStatusResponse, a, b);
+  static equals(a: GetNarrationResponse | PlainMessage<GetNarrationResponse> | undefined, b: GetNarrationResponse | PlainMessage<GetNarrationResponse> | undefined): boolean {
+    return proto3.util.equals(GetNarrationResponse, a, b);
   }
 }
 
 /**
- * @generated from enum api.v1.GetJobStatusResponse.Status
+ * @generated from message api.v1.GetNarratorsRequest
  */
-export enum GetJobStatusResponse_Status {
-  /**
-   * @generated from enum value: STATUS_UNSPECIFIED = 0;
-   */
-  UNSPECIFIED = 0,
-
-  /**
-   * @generated from enum value: STATUS_PROGRESSING = 1;
-   */
-  PROGRESSING = 1,
-
-  /**
-   * @generated from enum value: STATUS_COMPLETED = 2;
-   */
-  COMPLETED = 2,
-
-  /**
-   * @generated from enum value: STATUS_FAILED = 3;
-   */
-  FAILED = 3,
-
-  /**
-   * @generated from enum value: STATUS_NOT_FOUND = 4;
-   */
-  NOT_FOUND = 4,
-}
-// Retrieve enum metadata with: proto3.getEnumType(GetJobStatusResponse_Status)
-proto3.util.setEnumType(GetJobStatusResponse_Status, "api.v1.GetJobStatusResponse.Status", [
-  { no: 0, name: "STATUS_UNSPECIFIED" },
-  { no: 1, name: "STATUS_PROGRESSING" },
-  { no: 2, name: "STATUS_COMPLETED" },
-  { no: 3, name: "STATUS_FAILED" },
-  { no: 4, name: "STATUS_NOT_FOUND" },
-]);
-
-/**
- * @generated from message api.v1.GetSpeakersRequest
- */
-export class GetSpeakersRequest extends Message<GetSpeakersRequest> {
-  constructor(data?: PartialMessage<GetSpeakersRequest>) {
+export class GetNarratorsRequest extends Message<GetNarratorsRequest> {
+  constructor(data?: PartialMessage<GetNarratorsRequest>) {
     super();
     proto3.util.initPartial(data, this);
   }
 
   static readonly runtime: typeof proto3 = proto3;
-  static readonly typeName = "api.v1.GetSpeakersRequest";
+  static readonly typeName = "api.v1.GetNarratorsRequest";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
   ]);
 
-  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetSpeakersRequest {
-    return new GetSpeakersRequest().fromBinary(bytes, options);
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetNarratorsRequest {
+    return new GetNarratorsRequest().fromBinary(bytes, options);
   }
 
-  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetSpeakersRequest {
-    return new GetSpeakersRequest().fromJson(jsonValue, options);
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetNarratorsRequest {
+    return new GetNarratorsRequest().fromJson(jsonValue, options);
   }
 
-  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetSpeakersRequest {
-    return new GetSpeakersRequest().fromJsonString(jsonString, options);
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetNarratorsRequest {
+    return new GetNarratorsRequest().fromJsonString(jsonString, options);
   }
 
-  static equals(a: GetSpeakersRequest | PlainMessage<GetSpeakersRequest> | undefined, b: GetSpeakersRequest | PlainMessage<GetSpeakersRequest> | undefined): boolean {
-    return proto3.util.equals(GetSpeakersRequest, a, b);
+  static equals(a: GetNarratorsRequest | PlainMessage<GetNarratorsRequest> | undefined, b: GetNarratorsRequest | PlainMessage<GetNarratorsRequest> | undefined): boolean {
+    return proto3.util.equals(GetNarratorsRequest, a, b);
   }
 }
 
 /**
- * @generated from message api.v1.GetSpeakersResponse
+ * @generated from message api.v1.GetNarratorsResponse
  */
-export class GetSpeakersResponse extends Message<GetSpeakersResponse> {
+export class GetNarratorsResponse extends Message<GetNarratorsResponse> {
   /**
-   * @generated from field: repeated api.v1.Speaker speakers = 1;
+   * @generated from field: repeated api.v1.Narrator narrator = 1;
+   */
+  narrator: Narrator[] = [];
+
+  constructor(data?: PartialMessage<GetNarratorsResponse>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "api.v1.GetNarratorsResponse";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "narrator", kind: "message", T: Narrator, repeated: true },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetNarratorsResponse {
+    return new GetNarratorsResponse().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetNarratorsResponse {
+    return new GetNarratorsResponse().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetNarratorsResponse {
+    return new GetNarratorsResponse().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: GetNarratorsResponse | PlainMessage<GetNarratorsResponse> | undefined, b: GetNarratorsResponse | PlainMessage<GetNarratorsResponse> | undefined): boolean {
+    return proto3.util.equals(GetNarratorsResponse, a, b);
+  }
+}
+
+/**
+ * @generated from message api.v1.Narrator
+ */
+export class Narrator extends Message<Narrator> {
+  /**
+   * @generated from field: string name = 1;
+   */
+  name = "";
+
+  /**
+   * @generated from field: repeated api.v1.Speaker speakers = 2;
    */
   speakers: Speaker[] = [];
 
-  constructor(data?: PartialMessage<GetSpeakersResponse>) {
+  constructor(data?: PartialMessage<Narrator>) {
     super();
     proto3.util.initPartial(data, this);
   }
 
   static readonly runtime: typeof proto3 = proto3;
-  static readonly typeName = "api.v1.GetSpeakersResponse";
+  static readonly typeName = "api.v1.Narrator";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
-    { no: 1, name: "speakers", kind: "message", T: Speaker, repeated: true },
+    { no: 1, name: "name", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 2, name: "speakers", kind: "message", T: Speaker, repeated: true },
   ]);
 
-  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetSpeakersResponse {
-    return new GetSpeakersResponse().fromBinary(bytes, options);
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): Narrator {
+    return new Narrator().fromBinary(bytes, options);
   }
 
-  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetSpeakersResponse {
-    return new GetSpeakersResponse().fromJson(jsonValue, options);
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): Narrator {
+    return new Narrator().fromJson(jsonValue, options);
   }
 
-  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetSpeakersResponse {
-    return new GetSpeakersResponse().fromJsonString(jsonString, options);
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): Narrator {
+    return new Narrator().fromJsonString(jsonString, options);
   }
 
-  static equals(a: GetSpeakersResponse | PlainMessage<GetSpeakersResponse> | undefined, b: GetSpeakersResponse | PlainMessage<GetSpeakersResponse> | undefined): boolean {
-    return proto3.util.equals(GetSpeakersResponse, a, b);
+  static equals(a: Narrator | PlainMessage<Narrator> | undefined, b: Narrator | PlainMessage<Narrator> | undefined): boolean {
+    return proto3.util.equals(Narrator, a, b);
   }
 }
 
@@ -283,19 +326,14 @@ export class GetSpeakersResponse extends Message<GetSpeakersResponse> {
  */
 export class Speaker extends Message<Speaker> {
   /**
-   * @generated from field: string narrator = 1;
+   * @generated from field: int32 id = 1;
    */
-  narrator = "";
+  id = 0;
 
   /**
-   * @generated from field: int32 speaker_id = 2;
+   * @generated from field: string label = 2;
    */
-  speakerId = 0;
-
-  /**
-   * @generated from field: string speaker_label = 3;
-   */
-  speakerLabel = "";
+  label = "";
 
   constructor(data?: PartialMessage<Speaker>) {
     super();
@@ -305,9 +343,8 @@ export class Speaker extends Message<Speaker> {
   static readonly runtime: typeof proto3 = proto3;
   static readonly typeName = "api.v1.Speaker";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
-    { no: 1, name: "narrator", kind: "scalar", T: 9 /* ScalarType.STRING */ },
-    { no: 2, name: "speaker_id", kind: "scalar", T: 5 /* ScalarType.INT32 */ },
-    { no: 3, name: "speaker_label", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 1, name: "id", kind: "scalar", T: 5 /* ScalarType.INT32 */ },
+    { no: 2, name: "label", kind: "scalar", T: 9 /* ScalarType.STRING */ },
   ]);
 
   static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): Speaker {
@@ -324,6 +361,454 @@ export class Speaker extends Message<Speaker> {
 
   static equals(a: Speaker | PlainMessage<Speaker> | undefined, b: Speaker | PlainMessage<Speaker> | undefined): boolean {
     return proto3.util.equals(Speaker, a, b);
+  }
+}
+
+/**
+ * @generated from message api.v1.QueueSourceItemRequest
+ */
+export class QueueSourceItemRequest extends Message<QueueSourceItemRequest> {
+  /**
+   * @generated from field: string url = 1;
+   */
+  url = "";
+
+  /**
+   * @generated from field: bool disable_cache = 2;
+   */
+  disableCache = false;
+
+  constructor(data?: PartialMessage<QueueSourceItemRequest>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "api.v1.QueueSourceItemRequest";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "url", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 2, name: "disable_cache", kind: "scalar", T: 8 /* ScalarType.BOOL */ },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): QueueSourceItemRequest {
+    return new QueueSourceItemRequest().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): QueueSourceItemRequest {
+    return new QueueSourceItemRequest().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): QueueSourceItemRequest {
+    return new QueueSourceItemRequest().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: QueueSourceItemRequest | PlainMessage<QueueSourceItemRequest> | undefined, b: QueueSourceItemRequest | PlainMessage<QueueSourceItemRequest> | undefined): boolean {
+    return proto3.util.equals(QueueSourceItemRequest, a, b);
+  }
+}
+
+/**
+ * @generated from message api.v1.QueueSourceItemResponse
+ */
+export class QueueSourceItemResponse extends Message<QueueSourceItemResponse> {
+  /**
+   * @generated from field: string id = 1;
+   */
+  id = "";
+
+  constructor(data?: PartialMessage<QueueSourceItemResponse>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "api.v1.QueueSourceItemResponse";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "id", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): QueueSourceItemResponse {
+    return new QueueSourceItemResponse().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): QueueSourceItemResponse {
+    return new QueueSourceItemResponse().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): QueueSourceItemResponse {
+    return new QueueSourceItemResponse().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: QueueSourceItemResponse | PlainMessage<QueueSourceItemResponse> | undefined, b: QueueSourceItemResponse | PlainMessage<QueueSourceItemResponse> | undefined): boolean {
+    return proto3.util.equals(QueueSourceItemResponse, a, b);
+  }
+}
+
+/**
+ * @generated from message api.v1.GetSourceItemRequest
+ */
+export class GetSourceItemRequest extends Message<GetSourceItemRequest> {
+  /**
+   * @generated from field: string id = 1;
+   */
+  id = "";
+
+  constructor(data?: PartialMessage<GetSourceItemRequest>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "api.v1.GetSourceItemRequest";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "id", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetSourceItemRequest {
+    return new GetSourceItemRequest().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetSourceItemRequest {
+    return new GetSourceItemRequest().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetSourceItemRequest {
+    return new GetSourceItemRequest().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: GetSourceItemRequest | PlainMessage<GetSourceItemRequest> | undefined, b: GetSourceItemRequest | PlainMessage<GetSourceItemRequest> | undefined): boolean {
+    return proto3.util.equals(GetSourceItemRequest, a, b);
+  }
+}
+
+/**
+ * @generated from message api.v1.GetSourceItemResponse
+ */
+export class GetSourceItemResponse extends Message<GetSourceItemResponse> {
+  /**
+   * @generated from field: api.v1.JobStatus status = 1;
+   */
+  status = JobStatus.UNSPECIFIED;
+
+  /**
+   * @generated from field: optional api.v1.SourceSummary metadata = 2;
+   */
+  metadata?: SourceSummary;
+
+  /**
+   * @generated from field: optional string content = 3;
+   */
+  content?: string;
+
+  constructor(data?: PartialMessage<GetSourceItemResponse>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "api.v1.GetSourceItemResponse";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "status", kind: "enum", T: proto3.getEnumType(JobStatus) },
+    { no: 2, name: "metadata", kind: "message", T: SourceSummary, opt: true },
+    { no: 3, name: "content", kind: "scalar", T: 9 /* ScalarType.STRING */, opt: true },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetSourceItemResponse {
+    return new GetSourceItemResponse().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetSourceItemResponse {
+    return new GetSourceItemResponse().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetSourceItemResponse {
+    return new GetSourceItemResponse().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: GetSourceItemResponse | PlainMessage<GetSourceItemResponse> | undefined, b: GetSourceItemResponse | PlainMessage<GetSourceItemResponse> | undefined): boolean {
+    return proto3.util.equals(GetSourceItemResponse, a, b);
+  }
+}
+
+/**
+ * @generated from message api.v1.QueueSourceCollectionRequest
+ */
+export class QueueSourceCollectionRequest extends Message<QueueSourceCollectionRequest> {
+  /**
+   * @generated from field: string url = 1;
+   */
+  url = "";
+
+  /**
+   * @generated from field: bool disable_cache = 2;
+   */
+  disableCache = false;
+
+  constructor(data?: PartialMessage<QueueSourceCollectionRequest>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "api.v1.QueueSourceCollectionRequest";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "url", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 2, name: "disable_cache", kind: "scalar", T: 8 /* ScalarType.BOOL */ },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): QueueSourceCollectionRequest {
+    return new QueueSourceCollectionRequest().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): QueueSourceCollectionRequest {
+    return new QueueSourceCollectionRequest().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): QueueSourceCollectionRequest {
+    return new QueueSourceCollectionRequest().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: QueueSourceCollectionRequest | PlainMessage<QueueSourceCollectionRequest> | undefined, b: QueueSourceCollectionRequest | PlainMessage<QueueSourceCollectionRequest> | undefined): boolean {
+    return proto3.util.equals(QueueSourceCollectionRequest, a, b);
+  }
+}
+
+/**
+ * @generated from message api.v1.QueueSourceCollectionResponse
+ */
+export class QueueSourceCollectionResponse extends Message<QueueSourceCollectionResponse> {
+  /**
+   * @generated from field: string id = 1;
+   */
+  id = "";
+
+  constructor(data?: PartialMessage<QueueSourceCollectionResponse>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "api.v1.QueueSourceCollectionResponse";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "id", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): QueueSourceCollectionResponse {
+    return new QueueSourceCollectionResponse().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): QueueSourceCollectionResponse {
+    return new QueueSourceCollectionResponse().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): QueueSourceCollectionResponse {
+    return new QueueSourceCollectionResponse().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: QueueSourceCollectionResponse | PlainMessage<QueueSourceCollectionResponse> | undefined, b: QueueSourceCollectionResponse | PlainMessage<QueueSourceCollectionResponse> | undefined): boolean {
+    return proto3.util.equals(QueueSourceCollectionResponse, a, b);
+  }
+}
+
+/**
+ * @generated from message api.v1.GetSourceCollectionRequest
+ */
+export class GetSourceCollectionRequest extends Message<GetSourceCollectionRequest> {
+  /**
+   * @generated from field: string id = 1;
+   */
+  id = "";
+
+  constructor(data?: PartialMessage<GetSourceCollectionRequest>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "api.v1.GetSourceCollectionRequest";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "id", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetSourceCollectionRequest {
+    return new GetSourceCollectionRequest().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetSourceCollectionRequest {
+    return new GetSourceCollectionRequest().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetSourceCollectionRequest {
+    return new GetSourceCollectionRequest().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: GetSourceCollectionRequest | PlainMessage<GetSourceCollectionRequest> | undefined, b: GetSourceCollectionRequest | PlainMessage<GetSourceCollectionRequest> | undefined): boolean {
+    return proto3.util.equals(GetSourceCollectionRequest, a, b);
+  }
+}
+
+/**
+ * @generated from message api.v1.GetSourceCollectionResponse
+ */
+export class GetSourceCollectionResponse extends Message<GetSourceCollectionResponse> {
+  /**
+   * @generated from field: api.v1.JobStatus status = 1;
+   */
+  status = JobStatus.UNSPECIFIED;
+
+  /**
+   * @generated from field: optional api.v1.SourceCollection collection = 2;
+   */
+  collection?: SourceCollection;
+
+  /**
+   * @generated from field: repeated api.v1.SourceSummary sources = 3;
+   */
+  sources: SourceSummary[] = [];
+
+  constructor(data?: PartialMessage<GetSourceCollectionResponse>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "api.v1.GetSourceCollectionResponse";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "status", kind: "enum", T: proto3.getEnumType(JobStatus) },
+    { no: 2, name: "collection", kind: "message", T: SourceCollection, opt: true },
+    { no: 3, name: "sources", kind: "message", T: SourceSummary, repeated: true },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetSourceCollectionResponse {
+    return new GetSourceCollectionResponse().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetSourceCollectionResponse {
+    return new GetSourceCollectionResponse().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetSourceCollectionResponse {
+    return new GetSourceCollectionResponse().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: GetSourceCollectionResponse | PlainMessage<GetSourceCollectionResponse> | undefined, b: GetSourceCollectionResponse | PlainMessage<GetSourceCollectionResponse> | undefined): boolean {
+    return proto3.util.equals(GetSourceCollectionResponse, a, b);
+  }
+}
+
+/**
+ * @generated from message api.v1.SourceSummary
+ */
+export class SourceSummary extends Message<SourceSummary> {
+  /**
+   * @generated from field: string id = 1;
+   */
+  id = "";
+
+  /**
+   * @generated from field: string url = 2;
+   */
+  url = "";
+
+  /**
+   * @generated from field: string title = 3;
+   */
+  title = "";
+
+  constructor(data?: PartialMessage<SourceSummary>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "api.v1.SourceSummary";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "id", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 2, name: "url", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 3, name: "title", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): SourceSummary {
+    return new SourceSummary().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): SourceSummary {
+    return new SourceSummary().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): SourceSummary {
+    return new SourceSummary().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: SourceSummary | PlainMessage<SourceSummary> | undefined, b: SourceSummary | PlainMessage<SourceSummary> | undefined): boolean {
+    return proto3.util.equals(SourceSummary, a, b);
+  }
+}
+
+/**
+ * @generated from message api.v1.SourceCollection
+ */
+export class SourceCollection extends Message<SourceCollection> {
+  /**
+   * @generated from field: string id = 1;
+   */
+  id = "";
+
+  /**
+   * @generated from field: string url = 2;
+   */
+  url = "";
+
+  /**
+   * @generated from field: string title = 3;
+   */
+  title = "";
+
+  /**
+   * @generated from field: string description = 4;
+   */
+  description = "";
+
+  /**
+   * @generated from field: string author = 5;
+   */
+  author = "";
+
+  /**
+   * @generated from field: repeated string tags = 6;
+   */
+  tags: string[] = [];
+
+  constructor(data?: PartialMessage<SourceCollection>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "api.v1.SourceCollection";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "id", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 2, name: "url", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 3, name: "title", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 4, name: "description", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 5, name: "author", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 6, name: "tags", kind: "scalar", T: 9 /* ScalarType.STRING */, repeated: true },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): SourceCollection {
+    return new SourceCollection().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): SourceCollection {
+    return new SourceCollection().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): SourceCollection {
+    return new SourceCollection().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: SourceCollection | PlainMessage<SourceCollection> | undefined, b: SourceCollection | PlainMessage<SourceCollection> | undefined): boolean {
+    return proto3.util.equals(SourceCollection, a, b);
   }
 }
 
