@@ -1,8 +1,12 @@
-import { useState, useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import { useGetNarrators } from "../hooks/useGetNarrators";
 import { Narrator, Speaker } from "../gen/api/v1/api_pb";
 
 interface Props {
+  url: string;
+  onUrlChange: (url: string) => void;
+  selectedSpeakerKey: string;
+  onSpeakerKeyChange: (key: string) => void;
   onSubmit: (url: string, narrator: string, speakerId: number) => void;
   isLoading: boolean;
   disabled: boolean;
@@ -15,10 +19,16 @@ interface FlattenedSpeaker {
   key: string;
 }
 
-export const NarrationForm = ({ onSubmit, isLoading, disabled }: Props) => {
-  const [url, setUrl] = useState("");
+export const NarrationForm = ({ 
+  url, 
+  onUrlChange, 
+  selectedSpeakerKey,
+  onSpeakerKeyChange,
+  onSubmit, 
+  isLoading, 
+  disabled 
+}: Props) => {
   const { data: narratorsData, isLoading: isNarratorsLoading } = useGetNarrators();
-  const [selectedSpeakerKey, setSelectedSpeakerKey] = useState<string>("");
 
   const flattenedSpeakers = useMemo<FlattenedSpeaker[]>(() => {
     if (!narratorsData?.narrator) return [];
@@ -33,11 +43,11 @@ export const NarrationForm = ({ onSubmit, isLoading, disabled }: Props) => {
   }, [narratorsData]);
 
   // Set default selection when speakers are loaded
-  useMemo(() => {
+  useEffect(() => {
     if (flattenedSpeakers.length > 0 && !selectedSpeakerKey) {
-      setSelectedSpeakerKey(flattenedSpeakers[0].key);
+      onSpeakerKeyChange(flattenedSpeakers[0].key);
     }
-  }, [flattenedSpeakers, selectedSpeakerKey]);
+  }, [flattenedSpeakers, selectedSpeakerKey, onSpeakerKeyChange]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -56,7 +66,7 @@ export const NarrationForm = ({ onSubmit, isLoading, disabled }: Props) => {
           type="text"
           placeholder="https://example.com"
           value={url}
-          onChange={(e) => setUrl(e.target.value)}
+          onChange={(e) => onUrlChange(e.target.value)}
           disabled={disabled}
         />
       </div>
@@ -69,7 +79,7 @@ export const NarrationForm = ({ onSubmit, isLoading, disabled }: Props) => {
           <select
             id="speaker-select"
             value={selectedSpeakerKey}
-            onChange={(e) => setSelectedSpeakerKey(e.target.value)}
+            onChange={(e) => onSpeakerKeyChange(e.target.value)}
             disabled={disabled || flattenedSpeakers.length === 0}
           >
             {flattenedSpeakers.map((s) => (

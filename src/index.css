@@ -179,3 +179,57 @@ audio {
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+
+.related-sources {
+  margin-top: 2.5rem;
+  text-align: left;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 2rem;
+}
+
+.related-sources h3 {
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.sources-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.source-item {
+  width: 100%;
+}
+
+.source-button {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 1rem;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  box-shadow: none;
+}
+
+.source-button:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(100, 108, 255, 0.4);
+}
+
+.source-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: white;
+}
+
+.source-url {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.4);
+  word-break: break-all;
+}

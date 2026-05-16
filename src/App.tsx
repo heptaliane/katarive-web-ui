@@ -1,15 +1,24 @@
 import { useState } from "react";
 import { useQueueNarration } from "./hooks/useQueueNarration";
 import { useJobStatus } from "./hooks/useJobStatus";
+import { useQueueSourceCollection, useSourceCollection } from "./hooks/useSourceCollection";
 import { NarrationForm } from "./components/NarrationForm";
 import { JobStatusCard } from "./components/JobStatusCard";
+import { RelatedSourcesList } from "./components/RelatedSourcesList";
 import { AudioPlayer } from "./components/AudioPlayer";
 import { JobStatus } from "./gen/api/v1/api_pb";
 
 function App() {
+  const [url, setUrl] = useState("");
+  const [selectedSpeakerKey, setSelectedSpeakerKey] = useState("");
   const [jobId, setJobId] = useState<string | null>(null);
+  const [collectionId, setCollectionId] = useState<string | null>(null);
+
   const queueNarration = useQueueNarration();
   const { data: jobStatus, error: statusError } = useJobStatus(jobId);
+
+  const queueSourceCollection = useQueueSourceCollection();
+  const { data: collectionData } = useSourceCollection(collectionId);
 
   const handleCreate = (url: string, narrator: string, speakerId: number) => {
     console.log("Starting QueueNarration for:", { url, narrator, speakerId });
@@ -23,7 +32,26 @@ function App() {
         console.error("QueueNarration Error:", err);
       }
     });
+
+    // Also fetch related sources for this URL
+    console.log("Starting QueueSourceCollection for:", url);
+    queueSourceCollection.mutate(url, {
+      onSuccess: (res: any) => {
+        console.log("QueueSourceCollection Success:", res);
+        setCollectionId(res.id);
+      }
+    });
   };
+
+  const handleSelectRelated = (newUrl: string) => {
+    setUrl(newUrl);
+    // Trigger narration for the new URL using the currently selected speaker
+    if (selectedSpeakerKey) {
+      const [narrator, speakerIdStr] = selectedSpeakerKey.split("-");
+      handleCreate(newUrl, narrator, parseInt(speakerIdStr, 10));
+    }
+  };
+
 
   // Log every job status change
   if (jobStatus) {
@@ -48,6 +76,10 @@ function App() {
       </p>
 
       <NarrationForm 
+        url={url}
+        onUrlChange={setUrl}
+        selectedSpeakerKey={selectedSpeakerKey}
+        onSpeakerKeyChange={setSelectedSpeakerKey}
         onSubmit={handleCreate} 
         isLoading={queueNarration.isPending} 
         disabled={isProgressing}
@@ -79,6 +111,15 @@ function App() {
         <p style={{ marginTop: '1rem', color: '#ef4444' }}>
           Error polling status: {statusError.message}
         </p>
+      )}
+
+      {collectionData && (
+        <RelatedSourcesList 
+          sources={collectionData.sources}
+          status={collectionData.status}
+          onSelect={handleSelectRelated}
+          isLoading={queueNarration.isPending}
+        />
       )}
     </div>
   );
