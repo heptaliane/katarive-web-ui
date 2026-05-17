@@ -4,6 +4,7 @@ export type NarrationStatus = 'idle' | 'pending' | 'processing' | 'completed' | 
 
 interface Props {
   sources: SourceSummary[];
+  title?: string;
   status: JobStatus;
   onSelect: (url: string) => void;
   isLoading: boolean;
@@ -18,6 +19,7 @@ interface Props {
 
 export const RelatedSourcesList = ({
   sources,
+  title,
   status,
   onSelect,
   isLoading,
@@ -99,7 +101,7 @@ export const RelatedSourcesList = ({
 
   return (
     <div className="related-sources-panel">
-      <h3>Related Sources</h3>
+      <h3>{title || "Related Sources"}</h3>
 
       {sources.length > 0 && (
         <div className="batch-toolbar">
