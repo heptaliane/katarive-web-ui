@@ -12,38 +12,38 @@ import { JobStatus, SourceSummary } from "./gen/api/v1/api_pb";
 function App() {
   const [url, setUrl] = useState("");
   const [selectedSpeakerKey, setSelectedSpeakerKey] = useState("");
-  const [jobId, setJobId] = useState<string | null>(null);
+  const [mainJobId, setMainJobId] = useState<string | null>(null);
+  const [batchJobId, setBatchJobId] = useState<string | null>(null);
   const [collectionId, setCollectionId] = useState<string | null>(null);
   const [isBatchActive, setIsBatchActive] = useState(false);
   const [isBatchPaused, setIsBatchPaused] = useState(false);
   const [sourceStatuses, setSourceStatuses] = useState<Record<string, NarrationStatus>>({});
 
   const queueNarration = useQueueNarration();
-  const { data: jobStatus, error: statusError } = useJobStatus(jobId);
+  const { data: mainJobStatus, error: mainStatusError } = useJobStatus(mainJobId);
+  const { data: batchJobStatus } = useJobStatus(batchJobId);
 
   const queueSourceCollection = useQueueSourceCollection();
   const { data: collectionData } = useSourceCollection(collectionId);
 
-  const autoNarratedJobIdRef = useRef<string | null>(null);
-
-  const handleCreate = useCallback((url: string, narrator: string, speakerId: number) => {
-    console.log("Starting QueueNarration for:", { url, narrator, speakerId });
-    setJobId(null);
-    queueNarration.mutate({ url, narrator, speakerId }, {
+  const handleCreate = useCallback((urlToQueue: string, narrator: string, speakerId: number) => {
+    console.log("Starting Main QueueNarration for:", { urlToQueue, narrator, speakerId });
+    setMainJobId(null);
+    queueNarration.mutate({ url: urlToQueue, narrator, speakerId }, {
       onSuccess: (res: any) => {
-        console.log("QueueNarration Success:", res);
-        setJobId(res.id);
+        console.log("Main QueueNarration Success:", res);
+        setMainJobId(res.id);
       },
       onError: (err) => {
-        console.error("QueueNarration Error:", err);
+        console.error("Main QueueNarration Error:", err);
       }
     });
 
     // Also fetch related sources for this URL only if it's not already in the displayed sources
-    const isAlreadyInCollection = collectionData?.sources?.some((s: SourceSummary) => s.url === url);
+    const isAlreadyInCollection = collectionData?.sources?.some((s: SourceSummary) => s.url === urlToQueue);
     if (!isAlreadyInCollection) {
-      console.log("Starting QueueSourceCollection for:", url);
-      queueSourceCollection.mutate(url, {
+      console.log("Starting QueueSourceCollection for:", urlToQueue);
+      queueSourceCollection.mutate(urlToQueue, {
         onSuccess: (res: any) => {
           console.log("QueueSourceCollection Success:", res);
           setCollectionId(res.id);
@@ -66,13 +66,22 @@ function App() {
     setSourceStatuses(initialStatuses);
     setIsBatchActive(true);
     setIsBatchPaused(false);
+    setBatchJobId(null);
 
     if (selectedSpeakerKey) {
       const [narrator, speakerIdStr] = selectedSpeakerKey.split("-");
-      setUrl(firstSource.url);
-      handleCreate(firstSource.url, narrator, parseInt(speakerIdStr, 10));
+      queueNarration.mutate({ url: firstSource.url, narrator, speakerId: parseInt(speakerIdStr, 10) }, {
+        onSuccess: (res: any) => {
+          console.log("Batch Narrate All Success:", res);
+          setBatchJobId(res.id);
+        },
+        onError: (err) => {
+          console.error("Batch Narrate All Error:", err);
+          setSourceStatuses(prev => ({ ...prev, [firstSource.url]: 'failed' }));
+        }
+      });
     }
-  }, [collectionData, selectedSpeakerKey, handleCreate, setUrl]);
+  }, [collectionData, selectedSpeakerKey, queueNarration]);
 
   const handlePause = useCallback(() => {
     setIsBatchPaused(true);
@@ -91,20 +100,28 @@ function App() {
       setIsBatchPaused(false);
       if (selectedSpeakerKey) {
         const [narrator, speakerIdStr] = selectedSpeakerKey.split("-");
-        setUrl(nextPending.url);
-        handleCreate(nextPending.url, narrator, parseInt(speakerIdStr, 10));
+        queueNarration.mutate({ url: nextPending.url, narrator, speakerId: parseInt(speakerIdStr, 10) }, {
+          onSuccess: (res: any) => {
+            console.log("Batch Resume Success:", res);
+            setBatchJobId(res.id);
+          },
+          onError: (err) => {
+            console.error("Batch Resume Error:", err);
+            setSourceStatuses(prev => ({ ...prev, [nextPending.url]: 'failed' }));
+          }
+        });
       }
     } else {
       setIsBatchActive(false);
       setIsBatchPaused(false);
     }
-  }, [collectionData, sourceStatuses, selectedSpeakerKey, handleCreate, setUrl]);
+  }, [collectionData, sourceStatuses, selectedSpeakerKey, queueNarration]);
 
   const handleCancelBatch = useCallback(() => {
     setIsBatchActive(false);
     setIsBatchPaused(false);
     setSourceStatuses({});
-    setJobId(null);
+    setBatchJobId(null);
   }, []);
 
   const handleSelectRelated = useCallback((newUrl: string) => {
@@ -116,55 +133,76 @@ function App() {
     }
   }, [setUrl, selectedSpeakerKey, handleCreate]);
 
+  const batchCompletedJobIdRef = useRef<string | null>(null);
+
   // Automatically trigger narration for the next source once the currently narrating source is completed or failed
   useEffect(() => {
-    if (!jobId || autoNarratedJobIdRef.current === jobId) return;
+    if (!batchJobId || batchCompletedJobIdRef.current === batchJobId) return;
 
-    const isCompleted = jobStatus?.status === JobStatus.COMPLETED;
-    const isFailed = jobStatus?.status === JobStatus.FAILED || jobStatus?.status === JobStatus.NOT_FOUND;
+    const isCompleted = batchJobStatus?.status === JobStatus.COMPLETED;
+    const isFailed = batchJobStatus?.status === JobStatus.FAILED || batchJobStatus?.status === JobStatus.NOT_FOUND;
 
     if (isCompleted || isFailed) {
-      autoNarratedJobIdRef.current = jobId;
+      batchCompletedJobIdRef.current = batchJobId;
 
-      if (isBatchActive) {
-        setSourceStatuses(prev => ({
-          ...prev,
-          [url]: isCompleted ? 'completed' : 'failed'
-        }));
+      if (collectionData?.sources) {
+        const activeSource = collectionData.sources.find((s: SourceSummary) => sourceStatuses[s.url] === 'processing');
+        if (activeSource) {
+          const activeUrl = activeSource.url;
+          setSourceStatuses(prev => ({
+            ...prev,
+            [activeUrl]: isCompleted ? 'completed' : 'failed'
+          }));
 
-        if (!isBatchPaused && collectionData?.sources) {
-          const currentIndex = collectionData.sources.findIndex((s: SourceSummary) => s.url === url);
-          if (currentIndex !== -1 && currentIndex + 1 < collectionData.sources.length) {
-            const nextSource = collectionData.sources[currentIndex + 1];
-            setSourceStatuses(prev => ({
-              ...prev,
-              [nextSource.url]: 'processing'
-            }));
-            console.log("Auto batch progression triggering for next source:", nextSource.url);
-            handleSelectRelated(nextSource.url);
-          } else {
-            setIsBatchActive(false);
+          if (!isBatchPaused) {
+            const currentIndex = collectionData.sources.findIndex((s: SourceSummary) => s.url === activeUrl);
+            if (currentIndex !== -1 && currentIndex + 1 < collectionData.sources.length) {
+               const nextSource = collectionData.sources[currentIndex + 1];
+               setSourceStatuses(prev => ({
+                 ...prev,
+                 [nextSource.url]: 'processing'
+               }));
+               console.log("Auto batch progression triggering for next source:", nextSource.url);
+               
+               if (selectedSpeakerKey) {
+                 const [narrator, speakerIdStr] = selectedSpeakerKey.split("-");
+                 queueNarration.mutate({ url: nextSource.url, narrator, speakerId: parseInt(speakerIdStr, 10) }, {
+                   onSuccess: (res: any) => {
+                     setBatchJobId(res.id);
+                   },
+                   onError: (err) => {
+                     console.error("Batch QueueNarration Error:", err);
+                     setSourceStatuses(prev => ({ ...prev, [nextSource.url]: 'failed' }));
+                   }
+                 });
+               }
+            } else {
+              setIsBatchActive(false);
+            }
           }
         }
       }
     }
-  }, [isBatchActive, isBatchPaused, jobId, jobStatus, collectionData, url, handleSelectRelated]);
+  }, [batchJobId, batchJobStatus, isBatchPaused, collectionData, sourceStatuses, selectedSpeakerKey, queueNarration]);
 
 
   // Log every job status change
-  if (jobStatus) {
-    console.log("JobStatus Update:", { jobId, status: jobStatus.status, path: jobStatus.path });
+  if (mainJobStatus) {
+    console.log("Main JobStatus Update:", { mainJobId, status: mainJobStatus.status, path: mainJobStatus.path });
+  }
+  if (batchJobStatus) {
+    console.log("Batch JobStatus Update:", { batchJobId, status: batchJobStatus.status });
   }
 
   // Log polling errors if they occur
-  if (statusError) {
-    console.error("GetNarration Polling Error:", statusError);
+  if (mainStatusError) {
+    console.error("GetNarration Polling Error:", mainStatusError);
   }
 
-  const isProgressing = jobStatus?.status === JobStatus.PROGRESSING;
-  const isCompleted = jobStatus?.status === JobStatus.COMPLETED;
-  const isFailed = jobStatus?.status === JobStatus.FAILED || 
-                 jobStatus?.status === JobStatus.NOT_FOUND;
+  const isProgressing = mainJobStatus?.status === JobStatus.PROGRESSING;
+  const isCompleted = mainJobStatus?.status === JobStatus.COMPLETED;
+  const isFailed = mainJobStatus?.status === JobStatus.FAILED || 
+                 mainJobStatus?.status === JobStatus.NOT_FOUND;
 
   return (
     <div className="app-container">
@@ -190,12 +228,12 @@ function App() {
           </p>
         )}
 
-        {jobId && jobStatus && (
+        {mainJobId && mainJobStatus && (
           <>
-            <JobStatusCard status={jobStatus.status} />
+            <JobStatusCard status={mainJobStatus.status} />
             
-            {isCompleted && jobStatus.path && (
-              <AudioPlayer path={jobStatus.path} />
+            {isCompleted && mainJobStatus.path && (
+              <AudioPlayer path={mainJobStatus.path} />
             )}
 
             {isFailed && (
@@ -206,9 +244,9 @@ function App() {
           </>
         )}
 
-        {statusError && (
+        {mainStatusError && (
           <p style={{ marginTop: '1rem', color: '#ef4444' }}>
-            Error polling status: {statusError.message}
+            Error polling status: {mainStatusError.message}
           </p>
         )}
       </div>

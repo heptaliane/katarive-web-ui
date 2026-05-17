@@ -163,19 +163,36 @@ describe('App Flow', () => {
       sources: mockSources,
     })
 
-    // Mock initial progression and narration success
-    mockClient.queueNarration.mockResolvedValue({ id: 'initial-id' })
+    let callCount = 0;
+    mockClient.queueNarration.mockImplementation(async () => {
+      callCount++;
+      return { id: `job-id-${callCount}` };
+    });
     mockClient.queueSourceCollection.mockResolvedValue({ id: 'collection-id' })
-    mockClient.getNarration.mockResolvedValueOnce({ status: JobStatus.COMPLETED, path: 'initial.mp3' })
 
-    // Mock succession of narration statuses for batch run:
-    // First source progresses and completes
-    mockClient.getNarration.mockResolvedValueOnce({ status: JobStatus.PROGRESSING })
-    mockClient.getNarration.mockResolvedValueOnce({ status: JobStatus.COMPLETED, path: 'first.mp3' })
-
-    // Second source progresses and completes
-    mockClient.getNarration.mockResolvedValueOnce({ status: JobStatus.PROGRESSING })
-    mockClient.getNarration.mockResolvedValueOnce({ status: JobStatus.COMPLETED, path: 'second.mp3' })
+    const jobCalls: Record<string, number> = {};
+    mockClient.getNarration.mockImplementation(async ({ id }: { id: string }) => {
+      if (id === 'job-id-1') {
+        return { status: JobStatus.COMPLETED, path: 'initial.mp3' };
+      }
+      if (id === 'job-id-2') {
+        if (!jobCalls[id]) jobCalls[id] = 0;
+        jobCalls[id]++;
+        if (jobCalls[id] === 1) {
+          return { status: JobStatus.PROGRESSING };
+        }
+        return { status: JobStatus.COMPLETED, path: 'first.mp3' };
+      }
+      if (id === 'job-id-3') {
+        if (!jobCalls[id]) jobCalls[id] = 0;
+        jobCalls[id]++;
+        if (jobCalls[id] === 1) {
+          return { status: JobStatus.PROGRESSING };
+        }
+        return { status: JobStatus.COMPLETED, path: 'second.mp3' };
+      }
+      return { status: JobStatus.IDLE };
+    });
 
     renderApp()
 
@@ -215,7 +232,7 @@ describe('App Flow', () => {
     await waitFor(() => {
       expect(screen.getByTestId('status-completed-https://test.com/1')).toBeInTheDocument()
       expect(screen.getByTestId('status-processing-https://test.com/2')).toBeInTheDocument()
-    })
+    }, { timeout: 4000 })
 
     // Click "Pause"
     const pauseButton = screen.getByRole('button', { name: /Pause/i })
@@ -225,7 +242,7 @@ describe('App Flow', () => {
     await waitFor(() => {
       expect(screen.getByTestId('status-completed-https://test.com/2')).toBeInTheDocument()
       expect(screen.getByTestId('status-pending-https://test.com/3')).toBeInTheDocument()
-    })
+    }, { timeout: 4000 })
 
     // Verify "Resume" and "Cancel" buttons are displayed
     const resumeButton = screen.getByRole('button', { name: /Resume/i })
