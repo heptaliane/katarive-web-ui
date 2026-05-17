@@ -253,7 +253,7 @@ function App() {
 
       <RelatedSourcesList 
         sources={collectionData?.sources || []}
-        title={collectionData?.title}
+        title={collectionData?.collection?.title}
         status={collectionData?.status ?? 0}
         onSelect={handleSelectRelated}
         isLoading={queueNarration.isPending}
