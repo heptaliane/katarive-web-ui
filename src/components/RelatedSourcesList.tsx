@@ -182,16 +182,18 @@ export const RelatedSourcesList = ({
 
       {sources.length > 0 && (
         <ul className="sources-list">
-          {sources.map((source) => (
-            <li key={source.id} className="source-item">
-              <div className="source-item-content">
-                <div className="source-item-button-wrapper">
-                  <button 
-                    onClick={() => onSelect(source.url)}
-                    disabled={isLoading || isBatchActive}
-                    className="source-button"
-                    type="button"
-                  >
+          {sources.map((source) => {
+            const isCompleted = sourceStatuses[source.url] === 'completed';
+            return (
+              <li key={source.id} className="source-item">
+                <div className="source-item-content">
+                  <div className="source-item-button-wrapper">
+                    <button 
+                      onClick={() => onSelect(source.url)}
+                      disabled={(isLoading || isBatchActive) && !isCompleted}
+                      className="source-button"
+                      type="button"
+                    >
                     <span className="source-title">{source.title}</span>
                     <span className="source-url">{source.url}</span>
                   </button>
@@ -199,7 +201,8 @@ export const RelatedSourcesList = ({
                 {renderStatusBadge(source.url)}
               </div>
             </li>
-          ))}
+            );
+          })}
         </ul>
       )}
     </div>
