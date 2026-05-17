@@ -36,15 +36,20 @@ function App() {
       }
     });
 
-    // Also fetch related sources for this URL
-    console.log("Starting QueueSourceCollection for:", url);
-    queueSourceCollection.mutate(url, {
-      onSuccess: (res: any) => {
-        console.log("QueueSourceCollection Success:", res);
-        setCollectionId(res.id);
-      }
-    });
-  }, [queueNarration, queueSourceCollection]);
+    // Also fetch related sources for this URL only if it's not already in the displayed sources
+    const isAlreadyInCollection = collectionData?.sources?.some(s => s.url === url);
+    if (!isAlreadyInCollection) {
+      console.log("Starting QueueSourceCollection for:", url);
+      queueSourceCollection.mutate(url, {
+        onSuccess: (res: any) => {
+          console.log("QueueSourceCollection Success:", res);
+          setCollectionId(res.id);
+        }
+      });
+    } else {
+      console.log("URL is already in the currently displayed sources. Skipping QueueSourceCollection.");
+    }
+  }, [queueNarration, queueSourceCollection, collectionData]);
 
   const handleSelectRelated = useCallback((newUrl: string) => {
     setUrl(newUrl);

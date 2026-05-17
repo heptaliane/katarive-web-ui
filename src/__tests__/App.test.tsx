@@ -205,5 +205,9 @@ describe('App Flow', () => {
         speakerId: 1,
       })
     }, { timeout: 3000 })
+
+    // Verify that queueSourceCollection was called only for the first URL, not the second URL
+    expect(mockClient.queueSourceCollection).toHaveBeenCalledTimes(1)
+    expect(mockClient.queueSourceCollection).toHaveBeenCalledWith('https://test.com/1')
   })
 })
