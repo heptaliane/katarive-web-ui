@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useQueueNarration } from "./hooks/useQueueNarration";
 import { useJobStatus } from "./hooks/useJobStatus";
 import { useQueueSourceCollection, useSourceCollection } from "./hooks/useSourceCollection";
@@ -13,6 +13,7 @@ function App() {
   const [selectedSpeakerKey, setSelectedSpeakerKey] = useState("");
   const [jobId, setJobId] = useState<string | null>(null);
   const [collectionId, setCollectionId] = useState<string | null>(null);
+  const [autoNarrate, setAutoNarrate] = useState(false);
 
   const queueNarration = useQueueNarration();
   const { data: jobStatus, error: statusError } = useJobStatus(jobId);
@@ -20,7 +21,9 @@ function App() {
   const queueSourceCollection = useQueueSourceCollection();
   const { data: collectionData } = useSourceCollection(collectionId);
 
-  const handleCreate = (url: string, narrator: string, speakerId: number) => {
+  const autoNarratedJobIdRef = useRef<string | null>(null);
+
+  const handleCreate = useCallback((url: string, narrator: string, speakerId: number) => {
     console.log("Starting QueueNarration for:", { url, narrator, speakerId });
     setJobId(null);
     queueNarration.mutate({ url, narrator, speakerId }, {
@@ -41,16 +44,36 @@ function App() {
         setCollectionId(res.id);
       }
     });
-  };
+  }, [queueNarration, queueSourceCollection]);
 
-  const handleSelectRelated = (newUrl: string) => {
+  const handleSelectRelated = useCallback((newUrl: string) => {
     setUrl(newUrl);
     // Trigger narration for the new URL using the currently selected speaker
     if (selectedSpeakerKey) {
       const [narrator, speakerIdStr] = selectedSpeakerKey.split("-");
       handleCreate(newUrl, narrator, parseInt(speakerIdStr, 10));
     }
-  };
+  }, [setUrl, selectedSpeakerKey, handleCreate]);
+
+  // Automatically trigger narration for the next source once the currently narrating source is completed
+  useEffect(() => {
+    if (
+      autoNarrate &&
+      jobId &&
+      jobStatus?.status === JobStatus.COMPLETED &&
+      autoNarratedJobIdRef.current !== jobId
+    ) {
+      autoNarratedJobIdRef.current = jobId;
+      if (collectionData?.sources) {
+        const currentIndex = collectionData.sources.findIndex(s => s.url === url);
+        if (currentIndex !== -1 && currentIndex + 1 < collectionData.sources.length) {
+          const nextSource = collectionData.sources[currentIndex + 1];
+          console.log("Auto progression triggering for next source:", nextSource.url);
+          handleSelectRelated(nextSource.url);
+        }
+      }
+    }
+  }, [autoNarrate, jobId, jobStatus, collectionData, url, handleSelectRelated]);
 
 
   // Log every job status change
@@ -83,6 +106,8 @@ function App() {
         onSubmit={handleCreate} 
         isLoading={queueNarration.isPending} 
         disabled={isProgressing}
+        autoNarrate={autoNarrate}
+        onAutoNarrateChange={setAutoNarrate}
       />
 
       {queueNarration.isError && (

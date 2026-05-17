@@ -10,6 +10,8 @@ interface Props {
   onSubmit: (url: string, narrator: string, speakerId: number) => void;
   isLoading: boolean;
   disabled: boolean;
+  autoNarrate: boolean;
+  onAutoNarrateChange: (value: boolean) => void;
 }
 
 interface FlattenedSpeaker {
@@ -26,7 +28,9 @@ export const NarrationForm = ({
   onSpeakerKeyChange,
   onSubmit, 
   isLoading, 
-  disabled 
+  disabled,
+  autoNarrate,
+  onAutoNarrateChange
 }: Props) => {
   const { data: narratorsData, isLoading: isNarratorsLoading } = useGetNarrators();
 
@@ -90,6 +94,19 @@ export const NarrationForm = ({
             {flattenedSpeakers.length === 0 && <option>No speakers available</option>}
           </select>
         )}
+      </div>
+
+      <div className="checkbox-group">
+        <input
+          id="auto-narrate-checkbox"
+          type="checkbox"
+          checked={autoNarrate}
+          onChange={(e) => onAutoNarrateChange(e.target.checked)}
+          disabled={disabled}
+        />
+        <label htmlFor="auto-narrate-checkbox" className="checkbox-label">
+          Auto Narrate Next
+        </label>
       </div>
 
       <button 

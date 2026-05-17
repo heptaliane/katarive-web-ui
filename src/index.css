@@ -103,6 +103,43 @@ input[type="text"]:focus, select:focus {
   background: rgba(255, 255, 255, 0.06);
 }
 
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  cursor: pointer;
+  user-select: none;
+  margin-top: 0.5rem;
+  padding: 0.5rem 0;
+}
+
+.checkbox-group input[type="checkbox"] {
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.03);
+  cursor: pointer;
+  accent-color: #646cff;
+  transition: all 0.2s ease;
+}
+
+.checkbox-group input[type="checkbox"]:hover {
+  border-color: #646cff;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.checkbox-label {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.8);
+  transition: color 0.2s ease;
+}
+
+.checkbox-group:hover .checkbox-label {
+  color: white;
+}
+
 .loading-text {
   padding: 0.8rem 1.2rem;
   color: rgba(255, 255, 255, 0.4);

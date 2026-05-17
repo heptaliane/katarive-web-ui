@@ -3,13 +3,15 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ClientProvider } from '../context'
 import App from '../App'
 import { vi } from 'vitest'
-import { GetJobStatusResponse_Status } from '../gen/api/v1/api_pb'
+import { JobStatus } from '../gen/api/v1/api_pb'
 
 // Create a mock client
 const mockClient = {
-  createNarration: vi.fn(),
-  getJobStatus: vi.fn(),
-  getSpeakers: vi.fn(),
+  queueNarration: vi.fn(),
+  getNarration: vi.fn(),
+  getNarrators: vi.fn(),
+  queueSourceCollection: vi.fn(),
+  getSourceCollection: vi.fn(),
 }
 
 const renderApp = () => {
@@ -26,21 +28,36 @@ const renderApp = () => {
 }
 
 describe('App Flow', () => {
-  const mockSpeakers = [
-    { narrator: 'narrator1', speakerId: 1, speakerLabel: 'Speaker 1' },
-    { narrator: 'narrator2', speakerId: 2, speakerLabel: 'Speaker 2' },
+  const mockNarrators = [
+    {
+      name: 'narrator1',
+      speakers: [
+        { id: 1, label: 'Speaker 1' }
+      ]
+    },
+    {
+      name: 'narrator2',
+      speakers: [
+        { id: 2, label: 'Speaker 2' }
+      ]
+    }
   ]
 
   beforeEach(() => {
     vi.resetAllMocks()
     // Default mock behavior with a small delay to capture loading states
-    mockClient.createNarration.mockImplementation(async () => {
+    mockClient.queueNarration.mockImplementation(async () => {
       await new Promise(resolve => setTimeout(resolve, 50));
       return { id: 'test-id' };
     })
-    mockClient.getSpeakers.mockResolvedValue({ speakers: mockSpeakers })
-    mockClient.getJobStatus.mockResolvedValue({
-      status: GetJobStatusResponse_Status.UNSPECIFIED,
+    mockClient.getNarrators.mockResolvedValue({ narrator: mockNarrators })
+    mockClient.getNarration.mockResolvedValue({
+      status: JobStatus.UNSPECIFIED,
+    })
+    mockClient.queueSourceCollection.mockResolvedValue({ id: 'collection-id' })
+    mockClient.getSourceCollection.mockResolvedValue({
+      status: JobStatus.COMPLETED,
+      sources: []
     })
   })
 
@@ -60,12 +77,12 @@ describe('App Flow', () => {
 
   it('handles the end-to-end generation flow', async () => {
     // 1. Initial status mock: PROGRESSING
-    mockClient.getJobStatus.mockResolvedValueOnce({
-      status: GetJobStatusResponse_Status.PROGRESSING,
+    mockClient.getNarration.mockResolvedValueOnce({
+      status: JobStatus.PROGRESSING,
     })
     // 2. Second wrap: COMPLETED
-    mockClient.getJobStatus.mockResolvedValueOnce({
-      status: GetJobStatusResponse_Status.COMPLETED,
+    mockClient.getNarration.mockResolvedValueOnce({
+      status: JobStatus.COMPLETED,
       path: 'test.mp3',
     })
 
@@ -81,13 +98,13 @@ describe('App Flow', () => {
     fireEvent.change(urlInput, { target: { value: 'https://test.com' } })
     
     const speakerSelect = screen.getByLabelText(/Select Speaker/i)
-    fireEvent.change(speakerSelect, { target: { value: '1' } }) // Select Speaker 2
+    fireEvent.change(speakerSelect, { target: { value: 'narrator2-2' } }) // Select Speaker 2
 
     fireEvent.click(screen.getByRole('button', { name: /Generate Narration/i }))
 
-    // Verify createNarration called with correct params
+    // Verify queueNarration called with correct params
     await waitFor(() => {
-      expect(mockClient.createNarration).toHaveBeenCalledWith({
+      expect(mockClient.queueNarration).toHaveBeenCalledWith({
         url: 'https://test.com',
         narrator: 'narrator2',
         speakerId: 2,
@@ -111,8 +128,8 @@ describe('App Flow', () => {
   })
 
   it('disables the generate button while a job is in progress', async () => {
-    mockClient.getJobStatus.mockResolvedValue({
-      status: GetJobStatusResponse_Status.PROGRESSING,
+    mockClient.getNarration.mockResolvedValue({
+      status: JobStatus.PROGRESSING,
     })
 
     renderApp()
@@ -131,5 +148,62 @@ describe('App Flow', () => {
       const button = screen.getByRole('button')
       expect(button).toBeDisabled()
     })
+  })
+
+  it('automatically triggers QueueNarrate for the next source when current is completed and autoNarrate toggle is checked', async () => {
+    // Mock getSourceCollection with 2 sources
+    const mockSources = [
+      { id: '1', url: 'https://test.com/1', title: 'Source 1' },
+      { id: '2', url: 'https://test.com/2', title: 'Source 2' },
+    ]
+    mockClient.getSourceCollection.mockResolvedValue({
+      status: JobStatus.COMPLETED,
+      sources: mockSources,
+    })
+
+    // Mock initial progression: PROGRESSING then COMPLETED
+    mockClient.getNarration.mockResolvedValueOnce({
+      status: JobStatus.PROGRESSING,
+    })
+    mockClient.getNarration.mockResolvedValueOnce({
+      status: JobStatus.COMPLETED,
+      path: 'first.mp3',
+    })
+
+    renderApp()
+
+    // Wait for speakers
+    await waitFor(() => {
+      expect(screen.getByLabelText(/Select Speaker/i)).toBeInTheDocument()
+    })
+
+    // Turn on auto-narrate toggle
+    const autoNarrateToggle = screen.getByLabelText(/Auto Narrate Next/i)
+    fireEvent.click(autoNarrateToggle)
+    expect(autoNarrateToggle).toBeChecked()
+
+    // Start narration on first URL
+    const urlInput = screen.getByLabelText(/Source URL/i)
+    fireEvent.change(urlInput, { target: { value: 'https://test.com/1' } })
+    
+    fireEvent.click(screen.getByRole('button', { name: /Generate Narration/i }))
+
+    // First queueNarration should be triggered
+    await waitFor(() => {
+      expect(mockClient.queueNarration).toHaveBeenCalledWith({
+        url: 'https://test.com/1',
+        narrator: 'narrator1',
+        speakerId: 1,
+      })
+    })
+
+    // Once the first job is completed, it should automatically trigger queueNarration for the second source URL
+    await waitFor(() => {
+      expect(mockClient.queueNarration).toHaveBeenLastCalledWith({
+        url: 'https://test.com/2',
+        narrator: 'narrator1',
+        speakerId: 1,
+      })
+    }, { timeout: 3000 })
   })
 })
