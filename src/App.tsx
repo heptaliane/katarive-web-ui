@@ -14,7 +14,6 @@ function App() {
   const [selectedSpeakerKey, setSelectedSpeakerKey] = useState("");
   const [jobId, setJobId] = useState<string | null>(null);
   const [collectionId, setCollectionId] = useState<string | null>(null);
-  const [autoNarrate, setAutoNarrate] = useState(false);
   const [isBatchActive, setIsBatchActive] = useState(false);
   const [isBatchPaused, setIsBatchPaused] = useState(false);
   const [sourceStatuses, setSourceStatuses] = useState<Record<string, NarrationStatus>>({});
@@ -147,16 +146,9 @@ function App() {
             setIsBatchActive(false);
           }
         }
-      } else if (autoNarrate && isCompleted && collectionData?.sources) {
-        const currentIndex = collectionData.sources.findIndex((s: SourceSummary) => s.url === url);
-        if (currentIndex !== -1 && currentIndex + 1 < collectionData.sources.length) {
-          const nextSource = collectionData.sources[currentIndex + 1];
-          console.log("Auto progression triggering for next source:", nextSource.url);
-          handleSelectRelated(nextSource.url);
-        }
       }
     }
-  }, [isBatchActive, isBatchPaused, autoNarrate, jobId, jobStatus, collectionData, url, handleSelectRelated]);
+  }, [isBatchActive, isBatchPaused, jobId, jobStatus, collectionData, url, handleSelectRelated]);
 
 
   // Log every job status change
@@ -190,8 +182,6 @@ function App() {
           onSubmit={handleCreate} 
           isLoading={queueNarration.isPending} 
           disabled={isProgressing}
-          autoNarrate={autoNarrate}
-          onAutoNarrateChange={setAutoNarrate}
         />
 
         {queueNarration.isError && (

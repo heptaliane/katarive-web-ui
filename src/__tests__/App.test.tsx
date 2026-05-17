@@ -150,66 +150,6 @@ describe('App Flow', () => {
     })
   })
 
-  it('automatically triggers QueueNarrate for the next source when current is completed and autoNarrate toggle is checked', async () => {
-    // Mock getSourceCollection with 2 sources
-    const mockSources = [
-      { id: '1', url: 'https://test.com/1', title: 'Source 1' },
-      { id: '2', url: 'https://test.com/2', title: 'Source 2' },
-    ]
-    mockClient.getSourceCollection.mockResolvedValue({
-      status: JobStatus.COMPLETED,
-      sources: mockSources,
-    })
-
-    // Mock initial progression: PROGRESSING then COMPLETED
-    mockClient.getNarration.mockResolvedValueOnce({
-      status: JobStatus.PROGRESSING,
-    })
-    mockClient.getNarration.mockResolvedValueOnce({
-      status: JobStatus.COMPLETED,
-      path: 'first.mp3',
-    })
-
-    renderApp()
-
-    // Wait for speakers
-    await waitFor(() => {
-      expect(screen.getByLabelText(/Select Speaker/i)).toBeInTheDocument()
-    })
-
-    // Turn on auto-narrate toggle
-    const autoNarrateToggle = screen.getByLabelText(/Auto Narrate Next/i)
-    fireEvent.click(autoNarrateToggle)
-    expect(autoNarrateToggle).toBeChecked()
-
-    // Start narration on first URL
-    const urlInput = screen.getByLabelText(/Source URL/i)
-    fireEvent.change(urlInput, { target: { value: 'https://test.com/1' } })
-    
-    fireEvent.click(screen.getByRole('button', { name: /Generate Narration/i }))
-
-    // First queueNarration should be triggered
-    await waitFor(() => {
-      expect(mockClient.queueNarration).toHaveBeenCalledWith({
-        url: 'https://test.com/1',
-        narrator: 'narrator1',
-        speakerId: 1,
-      })
-    })
-
-    // Once the first job is completed, it should automatically trigger queueNarration for the second source URL
-    await waitFor(() => {
-      expect(mockClient.queueNarration).toHaveBeenLastCalledWith({
-        url: 'https://test.com/2',
-        narrator: 'narrator1',
-        speakerId: 1,
-      })
-    }, { timeout: 3000 })
-
-    // Verify that queueSourceCollection was called only for the first URL, not the second URL
-    expect(mockClient.queueSourceCollection).toHaveBeenCalledTimes(1)
-    expect(mockClient.queueSourceCollection).toHaveBeenCalledWith({ url: 'https://test.com/1' })
-  })
 
   it('handles batch narration sequence: Narrate All, Pause, Resume, and Cancel', async () => {
     // Mock getSourceCollection with 3 sources
