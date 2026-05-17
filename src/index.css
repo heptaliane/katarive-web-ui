@@ -511,3 +511,22 @@ audio {
     border-color: #d8b4fe;
   }
 }
+
+/* Brand Header and Logo Animations */
+.brand-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.brand-logo {
+  filter: drop-shadow(0 4px 12px rgba(99, 102, 241, 0.3));
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.brand-logo:hover {
+  transform: scale(1.08) rotate(3deg);
+  filter: drop-shadow(0 6px 16px rgba(236, 72, 153, 0.45));
+}

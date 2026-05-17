@@ -7,6 +7,7 @@ import { JobStatusCard } from "./components/JobStatusCard";
 import { RelatedSourcesList } from "./components/RelatedSourcesList";
 import type { NarrationStatus } from "./components/RelatedSourcesList";
 import { AudioPlayer } from "./components/AudioPlayer";
+import { KatariveIcon } from "./components/KatariveIcon";
 import { JobStatus, SourceSummary } from "./gen/api/v1/api_pb";
 
 function App() {
@@ -207,7 +208,10 @@ function App() {
   return (
     <div className="app-container">
       <div className="card">
-        <h1>Katarive</h1>
+        <div className="brand-header">
+          <KatariveIcon size={56} className="brand-logo" />
+          <h1>Katarive</h1>
+        </div>
         <p style={{ opacity: 0.7, marginBottom: '2rem' }}>
           Paste a URL and generate its narration in seconds.
         </p>
