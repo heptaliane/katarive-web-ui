@@ -15,7 +15,7 @@ const logger: Interceptor = (next) => async (req) => {
 };
 
 const transport = createGrpcWebTransport({
-  baseUrl: import.meta.env.VITE_GRPC_WEB_URL || "",
+  baseUrl: import.meta.env.VITE_GRPC_WEB_URL || window.location.origin,
   interceptors: import.meta.env.DEV ? [logger] : [],
 });
 
