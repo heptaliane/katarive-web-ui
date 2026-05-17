@@ -5,6 +5,7 @@ import { useQueueSourceCollection, useSourceCollection } from "./hooks/useSource
 import { NarrationForm } from "./components/NarrationForm";
 import { JobStatusCard } from "./components/JobStatusCard";
 import { RelatedSourcesList } from "./components/RelatedSourcesList";
+import type { NarrationStatus } from "./components/RelatedSourcesList";
 import { AudioPlayer } from "./components/AudioPlayer";
 import { JobStatus, SourceSummary } from "./gen/api/v1/api_pb";
 
@@ -14,6 +15,9 @@ function App() {
   const [jobId, setJobId] = useState<string | null>(null);
   const [collectionId, setCollectionId] = useState<string | null>(null);
   const [autoNarrate, setAutoNarrate] = useState(false);
+  const [isBatchActive, setIsBatchActive] = useState(false);
+  const [isBatchPaused, setIsBatchPaused] = useState(false);
+  const [sourceStatuses, setSourceStatuses] = useState<Record<string, NarrationStatus>>({});
 
   const queueNarration = useQueueNarration();
   const { data: jobStatus, error: statusError } = useJobStatus(jobId);
@@ -51,6 +55,59 @@ function App() {
     }
   }, [queueNarration, queueSourceCollection, collectionData]);
 
+  const handleNarrateAll = useCallback(() => {
+    if (!collectionData?.sources || collectionData.sources.length === 0) return;
+
+    const firstSource = collectionData.sources[0];
+    const initialStatuses: Record<string, NarrationStatus> = {};
+    collectionData.sources.forEach((s: SourceSummary, idx: number) => {
+      initialStatuses[s.url] = idx === 0 ? 'processing' : 'pending';
+    });
+
+    setSourceStatuses(initialStatuses);
+    setIsBatchActive(true);
+    setIsBatchPaused(false);
+
+    if (selectedSpeakerKey) {
+      const [narrator, speakerIdStr] = selectedSpeakerKey.split("-");
+      setUrl(firstSource.url);
+      handleCreate(firstSource.url, narrator, parseInt(speakerIdStr, 10));
+    }
+  }, [collectionData, selectedSpeakerKey, handleCreate, setUrl]);
+
+  const handlePause = useCallback(() => {
+    setIsBatchPaused(true);
+  }, []);
+
+  const handleResume = useCallback(() => {
+    if (!collectionData?.sources) return;
+
+    // Find the first URL in the collection that is 'pending' or 'failed'
+    const nextPending = collectionData.sources.find((s: SourceSummary) => sourceStatuses[s.url] === 'pending');
+    if (nextPending) {
+      setSourceStatuses(prev => ({
+        ...prev,
+        [nextPending.url]: 'processing'
+      }));
+      setIsBatchPaused(false);
+      if (selectedSpeakerKey) {
+        const [narrator, speakerIdStr] = selectedSpeakerKey.split("-");
+        setUrl(nextPending.url);
+        handleCreate(nextPending.url, narrator, parseInt(speakerIdStr, 10));
+      }
+    } else {
+      setIsBatchActive(false);
+      setIsBatchPaused(false);
+    }
+  }, [collectionData, sourceStatuses, selectedSpeakerKey, handleCreate, setUrl]);
+
+  const handleCancelBatch = useCallback(() => {
+    setIsBatchActive(false);
+    setIsBatchPaused(false);
+    setSourceStatuses({});
+    setJobId(null);
+  }, []);
+
   const handleSelectRelated = useCallback((newUrl: string) => {
     setUrl(newUrl);
     // Trigger narration for the new URL using the currently selected speaker
@@ -60,16 +117,37 @@ function App() {
     }
   }, [setUrl, selectedSpeakerKey, handleCreate]);
 
-  // Automatically trigger narration for the next source once the currently narrating source is completed
+  // Automatically trigger narration for the next source once the currently narrating source is completed or failed
   useEffect(() => {
-    if (
-      autoNarrate &&
-      jobId &&
-      jobStatus?.status === JobStatus.COMPLETED &&
-      autoNarratedJobIdRef.current !== jobId
-    ) {
+    if (!jobId || autoNarratedJobIdRef.current === jobId) return;
+
+    const isCompleted = jobStatus?.status === JobStatus.COMPLETED;
+    const isFailed = jobStatus?.status === JobStatus.FAILED || jobStatus?.status === JobStatus.NOT_FOUND;
+
+    if (isCompleted || isFailed) {
       autoNarratedJobIdRef.current = jobId;
-      if (collectionData?.sources) {
+
+      if (isBatchActive) {
+        setSourceStatuses(prev => ({
+          ...prev,
+          [url]: isCompleted ? 'completed' : 'failed'
+        }));
+
+        if (!isBatchPaused && collectionData?.sources) {
+          const currentIndex = collectionData.sources.findIndex((s: SourceSummary) => s.url === url);
+          if (currentIndex !== -1 && currentIndex + 1 < collectionData.sources.length) {
+            const nextSource = collectionData.sources[currentIndex + 1];
+            setSourceStatuses(prev => ({
+              ...prev,
+              [nextSource.url]: 'processing'
+            }));
+            console.log("Auto batch progression triggering for next source:", nextSource.url);
+            handleSelectRelated(nextSource.url);
+          } else {
+            setIsBatchActive(false);
+          }
+        }
+      } else if (autoNarrate && isCompleted && collectionData?.sources) {
         const currentIndex = collectionData.sources.findIndex((s: SourceSummary) => s.url === url);
         if (currentIndex !== -1 && currentIndex + 1 < collectionData.sources.length) {
           const nextSource = collectionData.sources[currentIndex + 1];
@@ -78,7 +156,7 @@ function App() {
         }
       }
     }
-  }, [autoNarrate, jobId, jobStatus, collectionData, url, handleSelectRelated]);
+  }, [isBatchActive, isBatchPaused, autoNarrate, jobId, jobStatus, collectionData, url, handleSelectRelated]);
 
 
   // Log every job status change
@@ -97,51 +175,53 @@ function App() {
                  jobStatus?.status === JobStatus.NOT_FOUND;
 
   return (
-    <div className="card">
-      <h1>Katarive</h1>
-      <p style={{ opacity: 0.7, marginBottom: '2rem' }}>
-        Paste a URL and generate its narration in seconds.
-      </p>
-
-      <NarrationForm 
-        url={url}
-        onUrlChange={setUrl}
-        selectedSpeakerKey={selectedSpeakerKey}
-        onSpeakerKeyChange={setSelectedSpeakerKey}
-        onSubmit={handleCreate} 
-        isLoading={queueNarration.isPending} 
-        disabled={isProgressing}
-        autoNarrate={autoNarrate}
-        onAutoNarrateChange={setAutoNarrate}
-      />
-
-      {queueNarration.isError && (
-        <p className="status-failed" style={{ marginTop: '1rem', padding: '0.5rem', borderRadius: '8px' }}>
-          Failed to start job: {queueNarration.error.message}
+    <div className="app-container">
+      <div className="card">
+        <h1>Katarive</h1>
+        <p style={{ opacity: 0.7, marginBottom: '2rem' }}>
+          Paste a URL and generate its narration in seconds.
         </p>
-      )}
 
-      {jobId && jobStatus && (
-        <>
-          <JobStatusCard status={jobStatus.status} />
-          
-          {isCompleted && jobStatus.path && (
-            <AudioPlayer path={jobStatus.path} />
-          )}
+        <NarrationForm 
+          url={url}
+          onUrlChange={setUrl}
+          selectedSpeakerKey={selectedSpeakerKey}
+          onSpeakerKeyChange={setSelectedSpeakerKey}
+          onSubmit={handleCreate} 
+          isLoading={queueNarration.isPending} 
+          disabled={isProgressing}
+          autoNarrate={autoNarrate}
+          onAutoNarrateChange={setAutoNarrate}
+        />
 
-          {isFailed && (
-            <p style={{ marginTop: '1rem', color: '#ef4444' }}>
-              Something went wrong. Please try again.
-            </p>
-          )}
-        </>
-      )}
+        {queueNarration.isError && (
+          <p className="status-failed" style={{ marginTop: '1rem', padding: '0.5rem', borderRadius: '8px' }}>
+            Failed to start job: {queueNarration.error.message}
+          </p>
+        )}
 
-      {statusError && (
-        <p style={{ marginTop: '1rem', color: '#ef4444' }}>
-          Error polling status: {statusError.message}
-        </p>
-      )}
+        {jobId && jobStatus && (
+          <>
+            <JobStatusCard status={jobStatus.status} />
+            
+            {isCompleted && jobStatus.path && (
+              <AudioPlayer path={jobStatus.path} />
+            )}
+
+            {isFailed && (
+              <p style={{ marginTop: '1rem', color: '#ef4444' }}>
+                Something went wrong. Please try again.
+              </p>
+            )}
+          </>
+        )}
+
+        {statusError && (
+          <p style={{ marginTop: '1rem', color: '#ef4444' }}>
+            Error polling status: {statusError.message}
+          </p>
+        )}
+      </div>
 
       {collectionData && (
         <RelatedSourcesList 
@@ -149,6 +229,13 @@ function App() {
           status={collectionData.status}
           onSelect={handleSelectRelated}
           isLoading={queueNarration.isPending}
+          sourceStatuses={sourceStatuses}
+          isBatchActive={isBatchActive}
+          isBatchPaused={isBatchPaused}
+          onNarrateAll={handleNarrateAll}
+          onPause={handlePause}
+          onResume={handleResume}
+          onCancelBatch={handleCancelBatch}
         />
       )}
     </div>

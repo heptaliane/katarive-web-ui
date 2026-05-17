@@ -217,19 +217,164 @@ audio {
   to { transform: rotate(360deg); }
 }
 
-.related-sources {
-  margin-top: 2.5rem;
+/* Layout container */
+.app-container {
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 2rem auto;
+  align-items: flex-start;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+@media (max-width: 960px) {
+  .app-container {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .card, .related-sources-panel {
+    width: 100% !important;
+    max-width: 500px !important;
+  }
+}
+
+/* Redefine card margins to fit grid */
+.card {
+  margin: 0;
+  width: 500px;
+  box-sizing: border-box;
+}
+
+/* Related Sources Panel */
+.related-sources-panel {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  padding: 2.5rem;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  width: 550px;
+  box-sizing: border-box;
   text-align: left;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  padding-top: 2rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.related-sources h3 {
-  font-size: 1.1rem;
+.related-sources-panel:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 48px 0 rgba(0, 0, 0, 0.5);
+}
+
+.related-sources-panel h3 {
+  font-size: 1.5rem;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  background: linear-gradient(to right, #a855f7, #646cff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 700;
+}
+
+/* Batch Toolbar styling */
+.batch-toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
   margin-bottom: 1.5rem;
-  color: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 1rem;
 }
 
+.batch-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.batch-btn {
+  padding: 0.6rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-shadow: none;
+  width: auto;
+  flex: 1;
+  transition: all 0.2s ease;
+}
+
+.batch-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.batch-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.batch-btn-primary {
+  background: linear-gradient(135deg, #646cff, #a855f7);
+  color: white;
+}
+
+.batch-btn-primary:hover:not(:disabled) {
+  box-shadow: 0 4px 12px rgba(100, 108, 255, 0.3);
+}
+
+.batch-btn-secondary {
+  background: rgba(255, 255, 255, 0.08);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.batch-btn-secondary:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.batch-btn-danger {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+.batch-btn-danger:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.25);
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.15);
+}
+
+.batch-progress-summary {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.progress-bar-container {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-top: 0.4rem;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(to right, #646cff, #a855f7);
+  transition: width 0.4s ease;
+}
+
+/* Sources List Layout */
 .sources-list {
   list-style: none;
   padding: 0;
@@ -243,6 +388,18 @@ audio {
   width: 100%;
 }
 
+.source-item-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 0.8rem;
+}
+
+.source-item-button-wrapper {
+  flex-grow: 1;
+}
+
 .source-button {
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.05);
@@ -252,6 +409,7 @@ audio {
   flex-direction: column;
   gap: 0.3rem;
   box-shadow: none;
+  width: 100%;
 }
 
 .source-button:hover:not(:disabled) {
@@ -269,4 +427,66 @@ audio {
   font-size: 0.8rem;
   color: rgba(255, 255, 255, 0.4);
   word-break: break-all;
+}
+
+/* Source Status indicator badge */
+.source-status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.status-indicator-idle {
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.02);
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.status-indicator-pending {
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.6);
+  animation: pulse-neutral 2s infinite ease-in-out;
+}
+
+.status-indicator-processing {
+  border: 1px solid #a855f7;
+  background: rgba(168, 85, 247, 0.15);
+  color: #c084fc;
+  animation: pulse-purple 1.5s infinite ease-in-out;
+}
+
+.status-indicator-completed {
+  border: 1px solid #22c55e;
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+}
+
+.status-indicator-failed {
+  border: 1px solid #ef4444;
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+}
+
+/* Keyframes for premium animations */
+@keyframes pulse-neutral {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+@keyframes pulse-purple {
+  0%, 100% {
+    box-shadow: 0 0 4px rgba(168, 85, 247, 0.4);
+    border-color: #a855f7;
+  }
+  50% {
+    box-shadow: 0 0 12px rgba(168, 85, 247, 0.7);
+    border-color: #d8b4fe;
+  }
 }

@@ -208,6 +208,98 @@ describe('App Flow', () => {
 
     // Verify that queueSourceCollection was called only for the first URL, not the second URL
     expect(mockClient.queueSourceCollection).toHaveBeenCalledTimes(1)
-    expect(mockClient.queueSourceCollection).toHaveBeenCalledWith('https://test.com/1')
+    expect(mockClient.queueSourceCollection).toHaveBeenCalledWith({ url: 'https://test.com/1' })
+  })
+
+  it('handles batch narration sequence: Narrate All, Pause, Resume, and Cancel', async () => {
+    // Mock getSourceCollection with 3 sources
+    const mockSources = [
+      { id: '1', url: 'https://test.com/1', title: 'Source 1' },
+      { id: '2', url: 'https://test.com/2', title: 'Source 2' },
+      { id: '3', url: 'https://test.com/3', title: 'Source 3' },
+    ]
+    mockClient.getSourceCollection.mockResolvedValue({
+      status: JobStatus.COMPLETED,
+      sources: mockSources,
+    })
+
+    // Mock initial progression and narration success
+    mockClient.queueNarration.mockResolvedValue({ id: 'initial-id' })
+    mockClient.queueSourceCollection.mockResolvedValue({ id: 'collection-id' })
+    mockClient.getNarration.mockResolvedValueOnce({ status: JobStatus.COMPLETED, path: 'initial.mp3' })
+
+    // Mock succession of narration statuses for batch run:
+    // First source progresses and completes
+    mockClient.getNarration.mockResolvedValueOnce({ status: JobStatus.PROGRESSING })
+    mockClient.getNarration.mockResolvedValueOnce({ status: JobStatus.COMPLETED, path: 'first.mp3' })
+
+    // Second source progresses and completes
+    mockClient.getNarration.mockResolvedValueOnce({ status: JobStatus.PROGRESSING })
+    mockClient.getNarration.mockResolvedValueOnce({ status: JobStatus.COMPLETED, path: 'second.mp3' })
+
+    renderApp()
+
+    // Wait for speakers
+    await waitFor(() => {
+      expect(screen.getByLabelText(/Select Speaker/i)).toBeInTheDocument()
+    })
+
+    // Start initial narration to fetch collection
+    const urlInput = screen.getByLabelText(/Source URL/i)
+    fireEvent.change(urlInput, { target: { value: 'https://test.com/1' } })
+    fireEvent.click(screen.getByRole('button', { name: /Generate Narration/i }))
+
+    // Wait for sources panel to be displayed
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /Narrate All/i })).toBeInTheDocument()
+    })
+
+    // Assert sources initial status indicators
+    expect(screen.getByTestId('status-idle-https://test.com/1')).toBeInTheDocument()
+
+    // Click "Narrate All"
+    fireEvent.click(screen.getByRole('button', { name: /Narrate All/i }))
+
+    // First source should be processing
+    await waitFor(() => {
+      expect(screen.getByTestId('status-processing-https://test.com/1')).toBeInTheDocument()
+      expect(screen.getByTestId('status-pending-https://test.com/2')).toBeInTheDocument()
+      expect(mockClient.queueNarration).toHaveBeenCalledWith({
+        url: 'https://test.com/1',
+        narrator: 'narrator1',
+        speakerId: 1,
+      })
+    })
+
+    // Wait for first source to complete. Since we are not paused, it should progress to the second URL
+    await waitFor(() => {
+      expect(screen.getByTestId('status-completed-https://test.com/1')).toBeInTheDocument()
+      expect(screen.getByTestId('status-processing-https://test.com/2')).toBeInTheDocument()
+    })
+
+    // Click "Pause"
+    const pauseButton = screen.getByRole('button', { name: /Pause/i })
+    fireEvent.click(pauseButton)
+
+    // Once second source finishes, it should NOT progress to the third source
+    await waitFor(() => {
+      expect(screen.getByTestId('status-completed-https://test.com/2')).toBeInTheDocument()
+      expect(screen.getByTestId('status-pending-https://test.com/3')).toBeInTheDocument()
+    })
+
+    // Verify "Resume" and "Cancel" buttons are displayed
+    const resumeButton = screen.getByRole('button', { name: /Resume/i })
+    const cancelButton = screen.getByRole('button', { name: /Cancel/i })
+    expect(resumeButton).toBeInTheDocument()
+    expect(cancelButton).toBeInTheDocument()
+
+    // Click "Cancel" to stop the batch completely
+    fireEvent.click(cancelButton)
+
+    // Verify batch is canceled and status indicators are reset
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /Narrate All/i })).toBeInTheDocument()
+      expect(screen.queryByTestId('status-completed-https://test.com/1')).not.toBeInTheDocument()
+    })
   })
 })
