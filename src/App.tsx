@@ -213,21 +213,19 @@ function App() {
         )}
       </div>
 
-      {collectionData && (
-        <RelatedSourcesList 
-          sources={collectionData.sources}
-          status={collectionData.status}
-          onSelect={handleSelectRelated}
-          isLoading={queueNarration.isPending}
-          sourceStatuses={sourceStatuses}
-          isBatchActive={isBatchActive}
-          isBatchPaused={isBatchPaused}
-          onNarrateAll={handleNarrateAll}
-          onPause={handlePause}
-          onResume={handleResume}
-          onCancelBatch={handleCancelBatch}
-        />
-      )}
+      <RelatedSourcesList 
+        sources={collectionData?.sources || []}
+        status={collectionData?.status ?? 0}
+        onSelect={handleSelectRelated}
+        isLoading={queueNarration.isPending}
+        sourceStatuses={sourceStatuses}
+        isBatchActive={isBatchActive}
+        isBatchPaused={isBatchPaused}
+        onNarrateAll={handleNarrateAll}
+        onPause={handlePause}
+        onResume={handleResume}
+        onCancelBatch={handleCancelBatch}
+      />
     </div>
   );
 }

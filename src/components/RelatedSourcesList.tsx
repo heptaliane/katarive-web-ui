@@ -31,10 +31,6 @@ export const RelatedSourcesList = ({
 }: Props) => {
   const isProgressing = status === JobStatus.PROGRESSING;
 
-  if (!isProgressing && sources.length === 0) {
-    return null;
-  }
-
   // Calculate batch metrics
   const total = sources.length;
   const completed = sources.filter(s => sourceStatuses[s.url] === 'completed').length;
@@ -176,26 +172,36 @@ export const RelatedSourcesList = ({
         </div>
       )}
 
-      <ul className="sources-list">
-        {sources.map((source) => (
-          <li key={source.id} className="source-item">
-            <div className="source-item-content">
-              <div className="source-item-button-wrapper">
-                <button 
-                  onClick={() => onSelect(source.url)}
-                  disabled={isLoading || isBatchActive}
-                  className="source-button"
-                  type="button"
-                >
-                  <span className="source-title">{source.title}</span>
-                  <span className="source-url">{source.url}</span>
-                </button>
+      {!isProgressing && sources.length === 0 && (
+        <div className="empty-sources-placeholder" style={{ padding: '2.5rem 1rem', textAlign: 'center', opacity: 0.5, border: '1px dashed rgba(255, 255, 255, 0.1)', borderRadius: '16px', margin: '1rem 0' }}>
+          <p style={{ margin: 0, fontSize: '0.9rem', lineHeight: '1.5' }}>
+            Enter a URL and generate narration to discover related sources.
+          </p>
+        </div>
+      )}
+
+      {sources.length > 0 && (
+        <ul className="sources-list">
+          {sources.map((source) => (
+            <li key={source.id} className="source-item">
+              <div className="source-item-content">
+                <div className="source-item-button-wrapper">
+                  <button 
+                    onClick={() => onSelect(source.url)}
+                    disabled={isLoading || isBatchActive}
+                    className="source-button"
+                    type="button"
+                  >
+                    <span className="source-title">{source.title}</span>
+                    <span className="source-url">{source.url}</span>
+                  </button>
+                </div>
+                {renderStatusBadge(source.url)}
               </div>
-              {renderStatusBadge(source.url)}
-            </div>
-          </li>
-        ))}
-      </ul>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };

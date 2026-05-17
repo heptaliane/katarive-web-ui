@@ -382,6 +382,27 @@ audio {
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
+  max-height: 450px;
+  overflow-y: auto;
+  padding-right: 0.4rem;
+}
+
+.sources-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sources-list::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 3px;
+}
+
+.sources-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+.sources-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .source-item {
