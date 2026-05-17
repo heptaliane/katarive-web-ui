@@ -6,7 +6,7 @@ import { NarrationForm } from "./components/NarrationForm";
 import { JobStatusCard } from "./components/JobStatusCard";
 import { RelatedSourcesList } from "./components/RelatedSourcesList";
 import { AudioPlayer } from "./components/AudioPlayer";
-import { JobStatus } from "./gen/api/v1/api_pb";
+import { JobStatus, SourceSummary } from "./gen/api/v1/api_pb";
 
 function App() {
   const [url, setUrl] = useState("");
@@ -37,7 +37,7 @@ function App() {
     });
 
     // Also fetch related sources for this URL only if it's not already in the displayed sources
-    const isAlreadyInCollection = collectionData?.sources?.some(s => s.url === url);
+    const isAlreadyInCollection = collectionData?.sources?.some((s: SourceSummary) => s.url === url);
     if (!isAlreadyInCollection) {
       console.log("Starting QueueSourceCollection for:", url);
       queueSourceCollection.mutate(url, {
@@ -70,7 +70,7 @@ function App() {
     ) {
       autoNarratedJobIdRef.current = jobId;
       if (collectionData?.sources) {
-        const currentIndex = collectionData.sources.findIndex(s => s.url === url);
+        const currentIndex = collectionData.sources.findIndex((s: SourceSummary) => s.url === url);
         if (currentIndex !== -1 && currentIndex + 1 < collectionData.sources.length) {
           const nextSource = collectionData.sources[currentIndex + 1];
           console.log("Auto progression triggering for next source:", nextSource.url);
