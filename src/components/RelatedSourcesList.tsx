@@ -107,43 +107,45 @@ export const RelatedSourcesList = ({
     <div className="related-sources-panel">
       <div className="panel-header">
         <h3>{title || "Related Sources"}</h3>
-        {onRefresh && title && (
-          <button 
-            onClick={onRefresh}
-            disabled={isRefreshing || isBatchActive}
-            className="refresh-btn"
-            title="Refresh Collection"
-            type="button"
-          >
-            <svg 
-              className={`refresh-icon ${isRefreshing ? 'spinning' : ''}`} 
-              width="16" 
-              height="16" 
-              viewBox="0 0 24 24" 
-              fill="none" 
-              stroke="currentColor" 
-              strokeWidth="2.5" 
-              strokeLinecap="round" 
-              strokeLinejoin="round"
-            >
-              <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
-            </svg>
-          </button>
-        )}
       </div>
 
       {sources.length > 0 && (
         <div className="batch-toolbar">
           <div className="batch-buttons">
             {!isBatchActive ? (
-              <button 
-                onClick={onNarrateAll}
-                disabled={isLoading}
-                className="batch-btn batch-btn-primary"
-                type="button"
-              >
-                Narrate All
-              </button>
+              <>
+                <button 
+                  onClick={onNarrateAll}
+                  disabled={isLoading || isRefreshing}
+                  className="batch-btn batch-btn-primary"
+                  type="button"
+                >
+                  Narrate All
+                </button>
+                {onRefresh && (
+                  <button 
+                    onClick={onRefresh}
+                    disabled={isRefreshing || isLoading}
+                    className="batch-btn batch-btn-primary batch-btn-refresh"
+                    title="Refresh Collection"
+                    type="button"
+                  >
+                    <svg 
+                      className={`refresh-icon ${isRefreshing ? 'spinning' : ''}`} 
+                      width="16" 
+                      height="16" 
+                      viewBox="0 0 24 24" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      strokeWidth="2.5" 
+                      strokeLinecap="round" 
+                      strokeLinejoin="round"
+                    >
+                      <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+                    </svg>
+                  </button>
+                )}
+              </>
             ) : (
               <>
                 {!isBatchPaused ? (
