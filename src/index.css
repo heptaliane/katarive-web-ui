@@ -289,18 +289,17 @@ audio {
 .refresh-btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 0.9rem;
-  font-size: 0.85rem;
-  font-weight: 600;
-  border-radius: 10px;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(255, 255, 255, 0.03);
   color: rgba(255, 255, 255, 0.7);
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  width: auto;
   box-shadow: none;
+  padding: 0;
 }
 
 .refresh-btn:hover:not(:disabled) {
