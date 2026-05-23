@@ -288,16 +288,27 @@ audio {
 
 .batch-btn-refresh {
   flex: 0 0 auto !important;
-  aspect-ratio: 1 / 1 !important;
+  width: 2.55rem !important;
+  height: 2.55rem !important;
   padding: 0 !important;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  background: rgba(255, 255, 255, 0.045);
+  color: rgba(255, 255, 255, 0.64);
+  border: 1px solid rgba(255, 255, 255, 0.075);
 }
 
 .refresh-icon {
   flex-shrink: 0;
   transition: transform 0.2s ease;
+}
+
+.batch-btn-refresh:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.075);
+  color: rgba(255, 255, 255, 0.82);
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: none;
 }
 
 .refresh-icon.spinning {

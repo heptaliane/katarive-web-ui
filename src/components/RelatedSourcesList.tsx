@@ -126,22 +126,23 @@ export const RelatedSourcesList = ({
                   <button 
                     onClick={onRefresh}
                     disabled={isRefreshing || isLoading}
-                    className="batch-btn batch-btn-primary batch-btn-refresh"
+                    className="batch-btn batch-btn-refresh"
                     title="Refresh Collection"
                     type="button"
                   >
                     <svg 
                       className={`refresh-icon ${isRefreshing ? 'spinning' : ''}`} 
-                      width="16" 
-                      height="16" 
+                      width="18" 
+                      height="18" 
                       viewBox="0 0 24 24" 
                       fill="none" 
                       stroke="currentColor" 
-                      strokeWidth="2.5" 
+                      strokeWidth="2.25" 
                       strokeLinecap="round" 
                       strokeLinejoin="round"
                     >
-                      <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+                      <path d="M21 12a9 9 0 1 1-2.64-6.36" />
+                      <path d="M21 3v6h-6" />
                     </svg>
                   </button>
                 )}
