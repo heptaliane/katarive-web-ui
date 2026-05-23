@@ -259,4 +259,55 @@ describe('App Flow', () => {
       expect(screen.queryByTestId('status-completed-https://test.com/1')).not.toBeInTheDocument()
     })
   })
+
+  it('handles refreshing a collection with cache disabled', async () => {
+    mockClient.getSourceCollection.mockResolvedValue({
+      status: JobStatus.COMPLETED,
+      collection: {
+        id: 'collection-id',
+        url: 'https://test.com/collection-url',
+        title: 'Mocked Collection',
+      },
+      sources: [
+        { id: '1', url: 'https://test.com/1', title: 'Source 1' }
+      ]
+    })
+
+    mockClient.queueSourceCollection.mockImplementation(async () => {
+      await new Promise(resolve => setTimeout(resolve, 50));
+      return { id: 'refreshed-collection-id' };
+    });
+
+    renderApp()
+
+    // Wait for speakers
+    await waitFor(() => {
+      expect(screen.getByLabelText(/Select Speaker/i)).toBeInTheDocument()
+    })
+
+    // Start initial narration to fetch collection
+    const urlInput = screen.getByLabelText(/Source URL/i)
+    fireEvent.change(urlInput, { target: { value: 'https://test.com/1' } })
+    fireEvent.click(screen.getByRole('button', { name: /Generate Narration/i }))
+
+    // Wait for collection to load and show the collection title
+    await waitFor(() => {
+      expect(screen.getByText('Mocked Collection')).toBeInTheDocument()
+    })
+
+    // Assert that the Refresh button is displayed
+    const refreshButton = screen.getByRole('button', { name: /Refresh Collection/i })
+    expect(refreshButton).toBeInTheDocument()
+
+    // Click Refresh button
+    fireEvent.click(refreshButton)
+
+    // Verify it calls queueSourceCollection with disableCache: true
+    await waitFor(() => {
+      expect(mockClient.queueSourceCollection).toHaveBeenCalledWith({
+        url: 'https://test.com/collection-url',
+        disableCache: true,
+      })
+    })
+  })
 })

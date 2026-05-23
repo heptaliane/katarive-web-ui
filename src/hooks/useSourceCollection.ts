@@ -5,7 +5,8 @@ import { JobStatus } from "../gen/api/v1/api_pb";
 export const useQueueSourceCollection = () => {
   const client = useClient();
   return useMutation({
-    mutationFn: (url: string) => client.queueSourceCollection({ url }),
+    mutationFn: ({ url, disableCache }: { url: string; disableCache?: boolean }) =>
+      client.queueSourceCollection({ url, disableCache }),
   });
 };
 

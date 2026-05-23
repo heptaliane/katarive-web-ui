@@ -15,6 +15,8 @@ interface Props {
   onPause: () => void;
   onResume: () => void;
   onCancelBatch: () => void;
+  onRefresh?: () => void;
+  isRefreshing?: boolean;
 }
 
 export const RelatedSourcesList = ({
@@ -29,7 +31,9 @@ export const RelatedSourcesList = ({
   onNarrateAll,
   onPause,
   onResume,
-  onCancelBatch
+  onCancelBatch,
+  onRefresh,
+  isRefreshing = false
 }: Props) => {
   const isProgressing = status === JobStatus.PROGRESSING;
 
@@ -101,7 +105,33 @@ export const RelatedSourcesList = ({
 
   return (
     <div className="related-sources-panel">
-      <h3>{title || "Related Sources"}</h3>
+      <div className="panel-header">
+        <h3>{title || "Related Sources"}</h3>
+        {onRefresh && title && (
+          <button 
+            onClick={onRefresh}
+            disabled={isRefreshing || isBatchActive}
+            className="refresh-btn"
+            title="Refresh Collection"
+            type="button"
+          >
+            <svg 
+              className={`refresh-icon ${isRefreshing ? 'spinning' : ''}`} 
+              width="14" 
+              height="14" 
+              viewBox="0 0 24 24" 
+              fill="none" 
+              stroke="currentColor" 
+              strokeWidth="2.5" 
+              strokeLinecap="round" 
+              strokeLinejoin="round"
+            >
+              <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+            </svg>
+            <span>{isRefreshing ? "Refreshing..." : "Refresh Collection"}</span>
+          </button>
+        )}
+      </div>
 
       {sources.length > 0 && (
         <div className="batch-toolbar">

@@ -268,14 +268,68 @@ audio {
   box-shadow: 0 12px 48px 0 rgba(0, 0, 0, 0.5);
 }
 
-.related-sources-panel h3 {
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  width: 100%;
+}
+
+.panel-header h3 {
   font-size: 1.5rem;
   margin-top: 0;
-  margin-bottom: 1rem;
+  margin-bottom: 0 !important;
   background: linear-gradient(to right, #a855f7, #646cff);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   font-weight: 700;
+}
+
+.refresh-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.9rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  width: auto;
+  box-shadow: none;
+}
+
+.refresh-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(100, 108, 255, 0.4);
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(100, 108, 255, 0.15);
+}
+
+.refresh-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.refresh-btn:disabled {
+  background: rgba(255, 255, 255, 0.01);
+  color: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.03);
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.refresh-icon {
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.refresh-icon.spinning {
+  animation: spin 1s linear infinite;
 }
 
 /* Batch Toolbar styling */

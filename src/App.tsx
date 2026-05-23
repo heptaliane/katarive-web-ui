@@ -44,7 +44,7 @@ function App() {
     const isAlreadyInCollection = collectionData?.sources?.some((s: SourceSummary) => s.url === urlToQueue);
     if (!isAlreadyInCollection) {
       console.log("Starting QueueSourceCollection for:", urlToQueue);
-      queueSourceCollection.mutate(urlToQueue, {
+      queueSourceCollection.mutate({ url: urlToQueue }, {
         onSuccess: (res: any) => {
           console.log("QueueSourceCollection Success:", res);
           setCollectionId(res.id);
@@ -133,6 +133,23 @@ function App() {
       handleCreate(newUrl, narrator, parseInt(speakerIdStr, 10));
     }
   }, [setUrl, selectedSpeakerKey, handleCreate]);
+
+  const handleRefreshCollection = useCallback(() => {
+    if (!collectionData?.collection?.url) return;
+    console.log("Starting QueueSourceCollection (Refresh) for:", collectionData.collection.url);
+    queueSourceCollection.mutate(
+      { url: collectionData.collection.url, disableCache: true },
+      {
+        onSuccess: (res: any) => {
+          console.log("Refresh Collection Success:", res);
+          setCollectionId(res.id);
+        },
+        onError: (err) => {
+          console.error("Refresh Collection Error:", err);
+        }
+      }
+    );
+  }, [collectionData, queueSourceCollection]);
 
   const batchCompletedJobIdRef = useRef<string | null>(null);
 
@@ -268,6 +285,8 @@ function App() {
         onPause={handlePause}
         onResume={handleResume}
         onCancelBatch={handleCancelBatch}
+        onRefresh={handleRefreshCollection}
+        isRefreshing={queueSourceCollection.isPending}
       />
     </div>
   );
