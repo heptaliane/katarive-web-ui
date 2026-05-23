@@ -135,10 +135,11 @@ function App() {
   }, [setUrl, selectedSpeakerKey, handleCreate]);
 
   const handleRefreshCollection = useCallback(() => {
-    if (!collectionData?.collection?.url) return;
-    console.log("Starting QueueSourceCollection (Refresh) for:", collectionData.collection.url);
+    const refreshUrl = url.trim() || collectionData?.collection?.url;
+    if (!refreshUrl) return;
+    console.log("Starting QueueSourceCollection (Refresh) for:", refreshUrl);
     queueSourceCollection.mutate(
-      { url: collectionData.collection.url, disableCache: true },
+      { url: refreshUrl, disableCache: true },
       {
         onSuccess: (res: any) => {
           console.log("Refresh Collection Success:", res);
@@ -149,7 +150,7 @@ function App() {
         }
       }
     );
-  }, [collectionData, queueSourceCollection]);
+  }, [url, collectionData, queueSourceCollection]);
 
   const batchCompletedJobIdRef = useRef<string | null>(null);
 

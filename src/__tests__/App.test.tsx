@@ -302,10 +302,10 @@ describe('App Flow', () => {
     // Click Refresh button
     fireEvent.click(refreshButton)
 
-    // Verify it calls queueSourceCollection with disableCache: true
+    // Verify it refreshes the URL currently entered in the narration form
     await waitFor(() => {
       expect(mockClient.queueSourceCollection).toHaveBeenCalledWith({
-        url: 'https://test.com/collection-url',
+        url: 'https://test.com/1',
         disableCache: true,
       })
     })
