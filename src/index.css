@@ -178,13 +178,35 @@ button:disabled {
   box-shadow: none;
 }
 
+.job-status-card {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.job-status-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.75);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  margin: 0;
+  padding: 0.15rem 0.5rem;
+  border-left: 2px solid #a855f7;
+  text-align: left;
+  align-self: flex-start;
+}
+
 .status-badge {
   display: inline-block;
   padding: 0.6rem 1.5rem;
   border-radius: 30px;
   font-size: 0.9rem;
   font-weight: 700;
-  margin-top: 2rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }

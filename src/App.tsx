@@ -252,7 +252,7 @@ function App() {
 
         {mainJobId && mainJobStatus && (
           <>
-            <JobStatusCard status={mainJobStatus.status} />
+            <JobStatusCard status={mainJobStatus.status} title={mainJobStatus.source?.title} />
             
             {isCompleted && mainJobStatus.path && (
               <AudioPlayer path={mainJobStatus.path} />

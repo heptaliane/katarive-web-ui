@@ -3,7 +3,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { GetNarrationRequest, GetNarrationResponse, GetNarratorsRequest, GetNarratorsResponse, GetSourceCollectionRequest, GetSourceCollectionResponse, GetSourceItemRequest, GetSourceItemResponse, QueueNarrationRequest, QueueNarrationResponse, QueueSourceCollectionRequest, QueueSourceCollectionResponse, QueueSourceItemRequest, QueueSourceItemResponse } from "./api_pb.js";
+import { GetNarrationRequest, GetNarrationResponse, GetNarratorsRequest, GetNarratorsResponse, GetSourceCollectionRequest, GetSourceCollectionResponse, GetSourceCollectionsRequest, GetSourceCollectionsResponse, GetSourceItemRequest, GetSourceItemResponse, QueueNarrationRequest, QueueNarrationResponse, QueueSourceCollectionRequest, QueueSourceCollectionResponse, QueueSourceItemRequest, QueueSourceItemResponse } from "./api_pb.js";
 import { MethodKind } from "@bufbuild/protobuf";
 
 /**
@@ -73,6 +73,15 @@ export const KatariveService = {
       name: "GetSourceCollection",
       I: GetSourceCollectionRequest,
       O: GetSourceCollectionResponse,
+      kind: MethodKind.Unary,
+    },
+    /**
+     * @generated from rpc api.v1.KatariveService.GetSourceCollections
+     */
+    getSourceCollections: {
+      name: "GetSourceCollections",
+      I: GetSourceCollectionsRequest,
+      O: GetSourceCollectionsResponse,
       kind: MethodKind.Unary,
     },
   }

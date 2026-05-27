@@ -2,9 +2,10 @@ import { JobStatus } from "../gen/api/v1/api_pb";
 
 interface Props {
   status: JobStatus;
+  title?: string;
 }
 
-export const JobStatusCard = ({ status }: Props) => {
+export const JobStatusCard = ({ status, title }: Props) => {
   const getStatusText = () => {
     switch (status) {
       case JobStatus.PROGRESSING:
@@ -23,8 +24,13 @@ export const JobStatusCard = ({ status }: Props) => {
   const statusInfo = getStatusText();
 
   return (
-    <div className={`status-badge ${statusInfo.class}`}>
-      {statusInfo.text}
+    <div className="job-status-card">
+      {title && (
+        <p className="job-status-title">{title}</p>
+      )}
+      <div className={`status-badge ${statusInfo.class}`}>
+        {statusInfo.text}
+      </div>
     </div>
   );
 };

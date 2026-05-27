@@ -181,6 +181,11 @@ export class GetNarrationResponse extends Message<GetNarrationResponse> {
    */
   path?: string;
 
+  /**
+   * @generated from field: optional api.v1.SourceSummary source = 3;
+   */
+  source?: SourceSummary;
+
   constructor(data?: PartialMessage<GetNarrationResponse>) {
     super();
     proto3.util.initPartial(data, this);
@@ -191,6 +196,7 @@ export class GetNarrationResponse extends Message<GetNarrationResponse> {
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
     { no: 1, name: "status", kind: "enum", T: proto3.getEnumType(JobStatus) },
     { no: 2, name: "path", kind: "scalar", T: 9 /* ScalarType.STRING */, opt: true },
+    { no: 3, name: "source", kind: "message", T: SourceSummary, opt: true },
   ]);
 
   static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetNarrationResponse {
@@ -693,6 +699,74 @@ export class GetSourceCollectionResponse extends Message<GetSourceCollectionResp
 
   static equals(a: GetSourceCollectionResponse | PlainMessage<GetSourceCollectionResponse> | undefined, b: GetSourceCollectionResponse | PlainMessage<GetSourceCollectionResponse> | undefined): boolean {
     return proto3.util.equals(GetSourceCollectionResponse, a, b);
+  }
+}
+
+/**
+ * @generated from message api.v1.GetSourceCollectionsRequest
+ */
+export class GetSourceCollectionsRequest extends Message<GetSourceCollectionsRequest> {
+  constructor(data?: PartialMessage<GetSourceCollectionsRequest>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "api.v1.GetSourceCollectionsRequest";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetSourceCollectionsRequest {
+    return new GetSourceCollectionsRequest().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetSourceCollectionsRequest {
+    return new GetSourceCollectionsRequest().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetSourceCollectionsRequest {
+    return new GetSourceCollectionsRequest().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: GetSourceCollectionsRequest | PlainMessage<GetSourceCollectionsRequest> | undefined, b: GetSourceCollectionsRequest | PlainMessage<GetSourceCollectionsRequest> | undefined): boolean {
+    return proto3.util.equals(GetSourceCollectionsRequest, a, b);
+  }
+}
+
+/**
+ * @generated from message api.v1.GetSourceCollectionsResponse
+ */
+export class GetSourceCollectionsResponse extends Message<GetSourceCollectionsResponse> {
+  /**
+   * @generated from field: repeated api.v1.SourceCollection collection = 1;
+   */
+  collection: SourceCollection[] = [];
+
+  constructor(data?: PartialMessage<GetSourceCollectionsResponse>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "api.v1.GetSourceCollectionsResponse";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "collection", kind: "message", T: SourceCollection, repeated: true },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetSourceCollectionsResponse {
+    return new GetSourceCollectionsResponse().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetSourceCollectionsResponse {
+    return new GetSourceCollectionsResponse().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetSourceCollectionsResponse {
+    return new GetSourceCollectionsResponse().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: GetSourceCollectionsResponse | PlainMessage<GetSourceCollectionsResponse> | undefined, b: GetSourceCollectionsResponse | PlainMessage<GetSourceCollectionsResponse> | undefined): boolean {
+    return proto3.util.equals(GetSourceCollectionsResponse, a, b);
   }
 }
 
