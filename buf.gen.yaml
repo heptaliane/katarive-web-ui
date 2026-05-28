@@ -1,12 +1,10 @@
 version: v2
 plugins:
-  - remote: buf.build/bufbuild/es:v1.10.0
+  - remote: buf.build/bufbuild/es
     out: src/gen
     opt:
       - target=ts
-  - remote: buf.build/connectrpc/es:v1.6.1
+  - remote: buf.build/connectrpc/es
     out: src/gen
     opt:
       - target=ts
-inputs:
-  - directory: ../katarive-proto

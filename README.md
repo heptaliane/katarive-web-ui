@@ -1,73 +1,73 @@
-# Katarive Web UI
+# React + TypeScript + Vite
 
-A premium, glassmorphism-themed Web interface for the **Katarive** audio narration service. This frontend communicates directly with the Katarive gRPC server via gRPC-Web.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## 🚀 Features
+Currently, two official plugins are available:
 
-- **Beautiful UI**: Modern dark-mode glassmorphism design with smooth animations.
-- **Direct gRPC Communication**: Connects directly to the Go server without requiring an external proxy sidecar.
-- **Real-time Status Polling**: Automatically polls the server for job status and updates the UI.
-- **Integrated Audio Player**: Instantly play generated narrations once a job is complete.
-- **Comprehensive Logging**: Detailed RPC interceptors for easy debugging in the browser console.
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
-## 🏗️ Architecture
+## React Compiler
 
-The system uses a unified architecture where the Go server handles native gRPC, gRPC-Web, and static files on a single port.
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-```mermaid
-graph TD
-    UI[Web UI] -->|gRPC-Web| Server[katarive-server :9421]
-    Server -->|Internal| gRPC[gRPC Handler]
-    Server -->|Internal| Static[Static File Server]
+## Expanding the ESLint configuration
+
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+
+```js
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+
+      // Remove tseslint.configs.recommended and replace with this
+      tseslint.configs.recommendedTypeChecked,
+      // Alternatively, use this for stricter rules
+      tseslint.configs.strictTypeChecked,
+      // Optionally, add this for stylistic rules
+      tseslint.configs.stylisticTypeChecked,
+
+      // Other configs...
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
 ```
 
-## 🛠️ Usage
+You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
-### Prerequisites
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
 
-- [Node.js](https://nodejs.org/) (v18+)
-- [Katarive Server](https://github.com/heptaliane/katarive-server) (Running on port 9421)
-
-### Installation
-
-```bash
-npm install
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+      // Enable lint rules for React
+      reactX.configs['recommended-typescript'],
+      // Enable lint rules for React DOM
+      reactDom.configs.recommended,
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
 ```
-
-### Development
-
-Run the development server with Hot Module Replacement (HMR):
-
-```bash
-npm run dev
-```
-
-### Production Deployment
-
-To build the UI for hosting on a Katarive server:
-
-```bash
-npm run build
-```
-
-Once built, manually copy the contents of the `dist/` directory to your server's static web directory (e.g., `web/` in the server root). Access the UI at: `http://<server-address>:9421/static/`
-
-## 📜 Available Scripts
-
-- `npm run gen`: Generates TypeScript client code from remote Protobuf definitions.
-- `npm run dev`: Starts the Vite development server.
-- `npm run build`: Builds the production-ready bundle in the `dist/` directory.
-- `npm run test`: Runs the Vitest test suite.
-
-## ⚙️ Environment Variables
-
-Copy `.env.example` to `.env` to customize your setup:
-
-| Variable | Default | Description |
-| :--- | :--- | :--- |
-| `VITE_GRPC_WEB_URL` | (empty) | The gRPC-Web URL. Defaults to the current origin. |
-| `VITE_AUDIO_BASE_URL` | (empty) | Base URL for fetching audio files. Defaults to the current origin. |
-
----
-
-Developed with ❤️ for the Katarive project.
