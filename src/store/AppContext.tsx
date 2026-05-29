@@ -6,10 +6,10 @@ import React, {
   useReducer,
   useRef,
 } from "react";
-import { KatariveClient } from "../api/client";
+import type { KatariveClient } from "../api/client";
 import { createStubClient } from "../api/stub";
-import {
-  JobStatus,
+import { JobStatus } from "../gen/api/v1/api_pb";
+import type {
   Narrator,
   SourceCollection,
   SourceSummary,
