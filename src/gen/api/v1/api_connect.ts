@@ -3,7 +3,24 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { GetNarrationRequest, GetNarrationResponse, GetNarratorsRequest, GetNarratorsResponse, GetSourceCollectionRequest, GetSourceCollectionResponse, GetSourceCollectionsRequest, GetSourceCollectionsResponse, GetSourceItemRequest, GetSourceItemResponse, QueueNarrationRequest, QueueNarrationResponse, QueueSourceCollectionRequest, QueueSourceCollectionResponse, QueueSourceItemRequest, QueueSourceItemResponse } from "./api_pb.js";
+import {
+  GetNarrationRequest,
+  GetNarrationResponse,
+  GetNarratorsRequest,
+  GetNarratorsResponse,
+  GetSourceCollectionRequest,
+  GetSourceCollectionResponse,
+  GetSourceCollectionsRequest,
+  GetSourceCollectionsResponse,
+  GetSourceItemRequest,
+  GetSourceItemResponse,
+  QueueNarrationRequest,
+  QueueNarrationResponse,
+  QueueSourceCollectionRequest,
+  QueueSourceCollectionResponse,
+  QueueSourceItemRequest,
+  QueueSourceItemResponse,
+} from "./api_pb.js";
 import { MethodKind } from "@bufbuild/protobuf";
 
 /**
@@ -84,6 +101,5 @@ export const KatariveService = {
       O: GetSourceCollectionsResponse,
       kind: MethodKind.Unary,
     },
-  }
+  },
 } as const;
-
