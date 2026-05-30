@@ -1,6 +1,6 @@
 import { createClient } from "@connectrpc/connect";
 import { createConnectTransport } from "@connectrpc/connect-web";
-import { KatariveService } from "../gen/api/v1/api_connect";
+import { KatariveService } from "../gen/api/v1/api_pb";
 import type { KatariveClient } from "./client";
 
 export function createConnectClient(baseUrl: string): KatariveClient {
