@@ -8,6 +8,7 @@ import React, {
 } from "react";
 import type { KatariveClient } from "../api/client";
 import { createStubClient } from "../api/stub";
+import { createConnectClient } from "../api/rpc";
 import { JobStatus } from "../gen/api/v1/api_pb";
 import type {
   Narrator,
@@ -222,7 +223,11 @@ const POLLING_INTERVAL_MS = 2000;
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const client = useRef<KatariveClient>(createStubClient()).current;
+  const client = useRef<KatariveClient>(
+    import.meta.env.VITE_API_BASE_URL
+      ? createConnectClient(import.meta.env.VITE_API_BASE_URL as string)
+      : createStubClient(),
+  ).current;
 
   // Initial Narrator load
   useEffect(() => {
