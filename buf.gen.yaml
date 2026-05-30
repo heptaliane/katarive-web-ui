@@ -1,10 +1,10 @@
 version: v2
 plugins:
-  - remote: buf.build/bufbuild/es
+  - local: ./node_modules/.bin/protoc-gen-es
     out: src/gen
     opt:
       - target=ts
-  - remote: buf.build/connectrpc/es
+  - local: ./node_modules/.bin/protoc-gen-connect-es
     out: src/gen
     opt:
       - target=ts
