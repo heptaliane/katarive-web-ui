@@ -225,7 +225,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(reducer, initialState);
   const client = useRef<KatariveClient>(
     import.meta.env.VITE_API_BASE_URL
-      ? createConnectClient(import.meta.env.VITE_API_BASE_URL as string)
+      ? createConnectClient(window.location.origin)
       : createStubClient(),
   ).current;
 

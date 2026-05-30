@@ -2,15 +2,28 @@
 // @generated from file api/v1/api.proto (package api.v1, syntax proto3)
 /* eslint-disable */
 
-import type { GenEnum, GenFile, GenMessage, GenService } from "@bufbuild/protobuf/codegenv2";
-import { enumDesc, fileDesc, messageDesc, serviceDesc } from "@bufbuild/protobuf/codegenv2";
+import type {
+  GenEnum,
+  GenFile,
+  GenMessage,
+  GenService,
+} from "@bufbuild/protobuf/codegenv2";
+import {
+  enumDesc,
+  fileDesc,
+  messageDesc,
+  serviceDesc,
+} from "@bufbuild/protobuf/codegenv2";
 import type { Message } from "@bufbuild/protobuf";
 
 /**
  * Describes the file api/v1/api.proto.
  */
-export const file_api_v1_api: GenFile = /*@__PURE__*/
-  fileDesc("ChBhcGkvdjEvYXBpLnByb3RvEgZhcGkudjEiSgoVUXVldWVOYXJyYXRpb25SZXF1ZXN0EgsKA3VybBgBIAEoCRIQCghuYXJyYXRvchgCIAEoCRISCgpzcGVha2VyX2lkGAMgASgFIiQKFlF1ZXVlTmFycmF0aW9uUmVzcG9uc2USCgoCaWQYASABKAkiIQoTR2V0TmFycmF0aW9uUmVxdWVzdBIKCgJpZBgBIAEoCSKMAQoUR2V0TmFycmF0aW9uUmVzcG9uc2USIQoGc3RhdHVzGAEgASgOMhEuYXBpLnYxLkpvYlN0YXR1cxIRCgRwYXRoGAIgASgJSACIAQESKgoGc291cmNlGAMgASgLMhUuYXBpLnYxLlNvdXJjZVN1bW1hcnlIAYgBAUIHCgVfcGF0aEIJCgdfc291cmNlIhUKE0dldE5hcnJhdG9yc1JlcXVlc3QiOgoUR2V0TmFycmF0b3JzUmVzcG9uc2USIgoIbmFycmF0b3IYASADKAsyEC5hcGkudjEuTmFycmF0b3IiOwoITmFycmF0b3ISDAoEbmFtZRgBIAEoCRIhCghzcGVha2VycxgCIAMoCzIPLmFwaS52MS5TcGVha2VyIiQKB1NwZWFrZXISCgoCaWQYASABKAUSDQoFbGFiZWwYAiABKAkiPAoWUXVldWVTb3VyY2VJdGVtUmVxdWVzdBILCgN1cmwYASABKAkSFQoNZGlzYWJsZV9jYWNoZRgCIAEoCCIlChdRdWV1ZVNvdXJjZUl0ZW1SZXNwb25zZRIKCgJpZBgBIAEoCSIiChRHZXRTb3VyY2VJdGVtUmVxdWVzdBIKCgJpZBgBIAEoCSKXAQoVR2V0U291cmNlSXRlbVJlc3BvbnNlEiEKBnN0YXR1cxgBIAEoDjIRLmFwaS52MS5Kb2JTdGF0dXMSLAoIbWV0YWRhdGEYAiABKAsyFS5hcGkudjEuU291cmNlU3VtbWFyeUgAiAEBEhQKB2NvbnRlbnQYAyABKAlIAYgBAUILCglfbWV0YWRhdGFCCgoIX2NvbnRlbnQiQgocUXVldWVTb3VyY2VDb2xsZWN0aW9uUmVxdWVzdBILCgN1cmwYASABKAkSFQoNZGlzYWJsZV9jYWNoZRgCIAEoCCIrCh1RdWV1ZVNvdXJjZUNvbGxlY3Rpb25SZXNwb25zZRIKCgJpZBgBIAEoCSIoChpHZXRTb3VyY2VDb2xsZWN0aW9uUmVxdWVzdBIKCgJpZBgBIAEoCSKqAQobR2V0U291cmNlQ29sbGVjdGlvblJlc3BvbnNlEiEKBnN0YXR1cxgBIAEoDjIRLmFwaS52MS5Kb2JTdGF0dXMSMQoKY29sbGVjdGlvbhgCIAEoCzIYLmFwaS52MS5Tb3VyY2VDb2xsZWN0aW9uSACIAQESJgoHc291cmNlcxgDIAMoCzIVLmFwaS52MS5Tb3VyY2VTdW1tYXJ5Qg0KC19jb2xsZWN0aW9uIh0KG0dldFNvdXJjZUNvbGxlY3Rpb25zUmVxdWVzdCJMChxHZXRTb3VyY2VDb2xsZWN0aW9uc1Jlc3BvbnNlEiwKCmNvbGxlY3Rpb24YASADKAsyGC5hcGkudjEuU291cmNlQ29sbGVjdGlvbiI3Cg1Tb3VyY2VTdW1tYXJ5EgoKAmlkGAEgASgJEgsKA3VybBgCIAEoCRINCgV0aXRsZRgDIAEoCSJtChBTb3VyY2VDb2xsZWN0aW9uEgoKAmlkGAEgASgJEgsKA3VybBgCIAEoCRINCgV0aXRsZRgDIAEoCRITCgtkZXNjcmlwdGlvbhgEIAEoCRIOCgZhdXRob3IYBSABKAkSDAoEdGFncxgGIAMoCSqOAQoJSm9iU3RhdHVzEhoKFkpPQl9TVEFUVVNfVU5TUEVDSUZJRUQQABIaChZKT0JfU1RBVFVTX1BST0dSRVNTSU5HEAESGAoUSk9CX1NUQVRVU19DT01QTEVURUQQAhIVChFKT0JfU1RBVFVTX0ZBSUxFRBADEhgKFEpPQl9TVEFUVVNfTk9UX0ZPVU5EEAQywwUKD0thdGFyaXZlU2VydmljZRJPCg5RdWV1ZU5hcnJhdGlvbhIdLmFwaS52MS5RdWV1ZU5hcnJhdGlvblJlcXVlc3QaHi5hcGkudjEuUXVldWVOYXJyYXRpb25SZXNwb25zZRJJCgxHZXROYXJyYXRpb24SGy5hcGkudjEuR2V0TmFycmF0aW9uUmVxdWVzdBocLmFwaS52MS5HZXROYXJyYXRpb25SZXNwb25zZRJJCgxHZXROYXJyYXRvcnMSGy5hcGkudjEuR2V0TmFycmF0b3JzUmVxdWVzdBocLmFwaS52MS5HZXROYXJyYXRvcnNSZXNwb25zZRJSCg9RdWV1ZVNvdXJjZUl0ZW0SHi5hcGkudjEuUXVldWVTb3VyY2VJdGVtUmVxdWVzdBofLmFwaS52MS5RdWV1ZVNvdXJjZUl0ZW1SZXNwb25zZRJMCg1HZXRTb3VyY2VJdGVtEhwuYXBpLnYxLkdldFNvdXJjZUl0ZW1SZXF1ZXN0Gh0uYXBpLnYxLkdldFNvdXJjZUl0ZW1SZXNwb25zZRJkChVRdWV1ZVNvdXJjZUNvbGxlY3Rpb24SJC5hcGkudjEuUXVldWVTb3VyY2VDb2xsZWN0aW9uUmVxdWVzdBolLmFwaS52MS5RdWV1ZVNvdXJjZUNvbGxlY3Rpb25SZXNwb25zZRJeChNHZXRTb3VyY2VDb2xsZWN0aW9uEiIuYXBpLnYxLkdldFNvdXJjZUNvbGxlY3Rpb25SZXF1ZXN0GiMuYXBpLnYxLkdldFNvdXJjZUNvbGxlY3Rpb25SZXNwb25zZRJhChRHZXRTb3VyY2VDb2xsZWN0aW9ucxIjLmFwaS52MS5HZXRTb3VyY2VDb2xsZWN0aW9uc1JlcXVlc3QaJC5hcGkudjEuR2V0U291cmNlQ29sbGVjdGlvbnNSZXNwb25zZWIGcHJvdG8z");
+export const file_api_v1_api: GenFile =
+  /*@__PURE__*/
+  fileDesc(
+    "ChBhcGkvdjEvYXBpLnByb3RvEgZhcGkudjEiSgoVUXVldWVOYXJyYXRpb25SZXF1ZXN0EgsKA3VybBgBIAEoCRIQCghuYXJyYXRvchgCIAEoCRISCgpzcGVha2VyX2lkGAMgASgFIiQKFlF1ZXVlTmFycmF0aW9uUmVzcG9uc2USCgoCaWQYASABKAkiIQoTR2V0TmFycmF0aW9uUmVxdWVzdBIKCgJpZBgBIAEoCSKMAQoUR2V0TmFycmF0aW9uUmVzcG9uc2USIQoGc3RhdHVzGAEgASgOMhEuYXBpLnYxLkpvYlN0YXR1cxIRCgRwYXRoGAIgASgJSACIAQESKgoGc291cmNlGAMgASgLMhUuYXBpLnYxLlNvdXJjZVN1bW1hcnlIAYgBAUIHCgVfcGF0aEIJCgdfc291cmNlIhUKE0dldE5hcnJhdG9yc1JlcXVlc3QiOgoUR2V0TmFycmF0b3JzUmVzcG9uc2USIgoIbmFycmF0b3IYASADKAsyEC5hcGkudjEuTmFycmF0b3IiOwoITmFycmF0b3ISDAoEbmFtZRgBIAEoCRIhCghzcGVha2VycxgCIAMoCzIPLmFwaS52MS5TcGVha2VyIiQKB1NwZWFrZXISCgoCaWQYASABKAUSDQoFbGFiZWwYAiABKAkiPAoWUXVldWVTb3VyY2VJdGVtUmVxdWVzdBILCgN1cmwYASABKAkSFQoNZGlzYWJsZV9jYWNoZRgCIAEoCCIlChdRdWV1ZVNvdXJjZUl0ZW1SZXNwb25zZRIKCgJpZBgBIAEoCSIiChRHZXRTb3VyY2VJdGVtUmVxdWVzdBIKCgJpZBgBIAEoCSKXAQoVR2V0U291cmNlSXRlbVJlc3BvbnNlEiEKBnN0YXR1cxgBIAEoDjIRLmFwaS52MS5Kb2JTdGF0dXMSLAoIbWV0YWRhdGEYAiABKAsyFS5hcGkudjEuU291cmNlU3VtbWFyeUgAiAEBEhQKB2NvbnRlbnQYAyABKAlIAYgBAUILCglfbWV0YWRhdGFCCgoIX2NvbnRlbnQiQgocUXVldWVTb3VyY2VDb2xsZWN0aW9uUmVxdWVzdBILCgN1cmwYASABKAkSFQoNZGlzYWJsZV9jYWNoZRgCIAEoCCIrCh1RdWV1ZVNvdXJjZUNvbGxlY3Rpb25SZXNwb25zZRIKCgJpZBgBIAEoCSIoChpHZXRTb3VyY2VDb2xsZWN0aW9uUmVxdWVzdBIKCgJpZBgBIAEoCSKqAQobR2V0U291cmNlQ29sbGVjdGlvblJlc3BvbnNlEiEKBnN0YXR1cxgBIAEoDjIRLmFwaS52MS5Kb2JTdGF0dXMSMQoKY29sbGVjdGlvbhgCIAEoCzIYLmFwaS52MS5Tb3VyY2VDb2xsZWN0aW9uSACIAQESJgoHc291cmNlcxgDIAMoCzIVLmFwaS52MS5Tb3VyY2VTdW1tYXJ5Qg0KC19jb2xsZWN0aW9uIh0KG0dldFNvdXJjZUNvbGxlY3Rpb25zUmVxdWVzdCJMChxHZXRTb3VyY2VDb2xsZWN0aW9uc1Jlc3BvbnNlEiwKCmNvbGxlY3Rpb24YASADKAsyGC5hcGkudjEuU291cmNlQ29sbGVjdGlvbiI3Cg1Tb3VyY2VTdW1tYXJ5EgoKAmlkGAEgASgJEgsKA3VybBgCIAEoCRINCgV0aXRsZRgDIAEoCSJtChBTb3VyY2VDb2xsZWN0aW9uEgoKAmlkGAEgASgJEgsKA3VybBgCIAEoCRINCgV0aXRsZRgDIAEoCRITCgtkZXNjcmlwdGlvbhgEIAEoCRIOCgZhdXRob3IYBSABKAkSDAoEdGFncxgGIAMoCSqOAQoJSm9iU3RhdHVzEhoKFkpPQl9TVEFUVVNfVU5TUEVDSUZJRUQQABIaChZKT0JfU1RBVFVTX1BST0dSRVNTSU5HEAESGAoUSk9CX1NUQVRVU19DT01QTEVURUQQAhIVChFKT0JfU1RBVFVTX0ZBSUxFRBADEhgKFEpPQl9TVEFUVVNfTk9UX0ZPVU5EEAQywwUKD0thdGFyaXZlU2VydmljZRJPCg5RdWV1ZU5hcnJhdGlvbhIdLmFwaS52MS5RdWV1ZU5hcnJhdGlvblJlcXVlc3QaHi5hcGkudjEuUXVldWVOYXJyYXRpb25SZXNwb25zZRJJCgxHZXROYXJyYXRpb24SGy5hcGkudjEuR2V0TmFycmF0aW9uUmVxdWVzdBocLmFwaS52MS5HZXROYXJyYXRpb25SZXNwb25zZRJJCgxHZXROYXJyYXRvcnMSGy5hcGkudjEuR2V0TmFycmF0b3JzUmVxdWVzdBocLmFwaS52MS5HZXROYXJyYXRvcnNSZXNwb25zZRJSCg9RdWV1ZVNvdXJjZUl0ZW0SHi5hcGkudjEuUXVldWVTb3VyY2VJdGVtUmVxdWVzdBofLmFwaS52MS5RdWV1ZVNvdXJjZUl0ZW1SZXNwb25zZRJMCg1HZXRTb3VyY2VJdGVtEhwuYXBpLnYxLkdldFNvdXJjZUl0ZW1SZXF1ZXN0Gh0uYXBpLnYxLkdldFNvdXJjZUl0ZW1SZXNwb25zZRJkChVRdWV1ZVNvdXJjZUNvbGxlY3Rpb24SJC5hcGkudjEuUXVldWVTb3VyY2VDb2xsZWN0aW9uUmVxdWVzdBolLmFwaS52MS5RdWV1ZVNvdXJjZUNvbGxlY3Rpb25SZXNwb25zZRJeChNHZXRTb3VyY2VDb2xsZWN0aW9uEiIuYXBpLnYxLkdldFNvdXJjZUNvbGxlY3Rpb25SZXF1ZXN0GiMuYXBpLnYxLkdldFNvdXJjZUNvbGxlY3Rpb25SZXNwb25zZRJhChRHZXRTb3VyY2VDb2xsZWN0aW9ucxIjLmFwaS52MS5HZXRTb3VyY2VDb2xsZWN0aW9uc1JlcXVlc3QaJC5hcGkudjEuR2V0U291cmNlQ29sbGVjdGlvbnNSZXNwb25zZWIGcHJvdG8z",
+  );
 
 /**
  * @generated from message api.v1.QueueNarrationRequest
@@ -36,24 +49,27 @@ export type QueueNarrationRequest = Message<"api.v1.QueueNarrationRequest"> & {
  * Describes the message api.v1.QueueNarrationRequest.
  * Use `create(QueueNarrationRequestSchema)` to create a new message.
  */
-export const QueueNarrationRequestSchema: GenMessage<QueueNarrationRequest> = /*@__PURE__*/
+export const QueueNarrationRequestSchema: GenMessage<QueueNarrationRequest> =
+  /*@__PURE__*/
   messageDesc(file_api_v1_api, 0);
 
 /**
  * @generated from message api.v1.QueueNarrationResponse
  */
-export type QueueNarrationResponse = Message<"api.v1.QueueNarrationResponse"> & {
-  /**
-   * @generated from field: string id = 1;
-   */
-  id: string;
-};
+export type QueueNarrationResponse =
+  Message<"api.v1.QueueNarrationResponse"> & {
+    /**
+     * @generated from field: string id = 1;
+     */
+    id: string;
+  };
 
 /**
  * Describes the message api.v1.QueueNarrationResponse.
  * Use `create(QueueNarrationResponseSchema)` to create a new message.
  */
-export const QueueNarrationResponseSchema: GenMessage<QueueNarrationResponse> = /*@__PURE__*/
+export const QueueNarrationResponseSchema: GenMessage<QueueNarrationResponse> =
+  /*@__PURE__*/
   messageDesc(file_api_v1_api, 1);
 
 /**
@@ -70,7 +86,8 @@ export type GetNarrationRequest = Message<"api.v1.GetNarrationRequest"> & {
  * Describes the message api.v1.GetNarrationRequest.
  * Use `create(GetNarrationRequestSchema)` to create a new message.
  */
-export const GetNarrationRequestSchema: GenMessage<GetNarrationRequest> = /*@__PURE__*/
+export const GetNarrationRequestSchema: GenMessage<GetNarrationRequest> =
+  /*@__PURE__*/
   messageDesc(file_api_v1_api, 2);
 
 /**
@@ -97,20 +114,21 @@ export type GetNarrationResponse = Message<"api.v1.GetNarrationResponse"> & {
  * Describes the message api.v1.GetNarrationResponse.
  * Use `create(GetNarrationResponseSchema)` to create a new message.
  */
-export const GetNarrationResponseSchema: GenMessage<GetNarrationResponse> = /*@__PURE__*/
+export const GetNarrationResponseSchema: GenMessage<GetNarrationResponse> =
+  /*@__PURE__*/
   messageDesc(file_api_v1_api, 3);
 
 /**
  * @generated from message api.v1.GetNarratorsRequest
  */
-export type GetNarratorsRequest = Message<"api.v1.GetNarratorsRequest"> & {
-};
+export type GetNarratorsRequest = Message<"api.v1.GetNarratorsRequest"> & {};
 
 /**
  * Describes the message api.v1.GetNarratorsRequest.
  * Use `create(GetNarratorsRequestSchema)` to create a new message.
  */
-export const GetNarratorsRequestSchema: GenMessage<GetNarratorsRequest> = /*@__PURE__*/
+export const GetNarratorsRequestSchema: GenMessage<GetNarratorsRequest> =
+  /*@__PURE__*/
   messageDesc(file_api_v1_api, 4);
 
 /**
@@ -127,7 +145,8 @@ export type GetNarratorsResponse = Message<"api.v1.GetNarratorsResponse"> & {
  * Describes the message api.v1.GetNarratorsResponse.
  * Use `create(GetNarratorsResponseSchema)` to create a new message.
  */
-export const GetNarratorsResponseSchema: GenMessage<GetNarratorsResponse> = /*@__PURE__*/
+export const GetNarratorsResponseSchema: GenMessage<GetNarratorsResponse> =
+  /*@__PURE__*/
   messageDesc(file_api_v1_api, 5);
 
 /**
@@ -149,7 +168,8 @@ export type Narrator = Message<"api.v1.Narrator"> & {
  * Describes the message api.v1.Narrator.
  * Use `create(NarratorSchema)` to create a new message.
  */
-export const NarratorSchema: GenMessage<Narrator> = /*@__PURE__*/
+export const NarratorSchema: GenMessage<Narrator> =
+  /*@__PURE__*/
   messageDesc(file_api_v1_api, 6);
 
 /**
@@ -171,46 +191,51 @@ export type Speaker = Message<"api.v1.Speaker"> & {
  * Describes the message api.v1.Speaker.
  * Use `create(SpeakerSchema)` to create a new message.
  */
-export const SpeakerSchema: GenMessage<Speaker> = /*@__PURE__*/
+export const SpeakerSchema: GenMessage<Speaker> =
+  /*@__PURE__*/
   messageDesc(file_api_v1_api, 7);
 
 /**
  * @generated from message api.v1.QueueSourceItemRequest
  */
-export type QueueSourceItemRequest = Message<"api.v1.QueueSourceItemRequest"> & {
-  /**
-   * @generated from field: string url = 1;
-   */
-  url: string;
+export type QueueSourceItemRequest =
+  Message<"api.v1.QueueSourceItemRequest"> & {
+    /**
+     * @generated from field: string url = 1;
+     */
+    url: string;
 
-  /**
-   * @generated from field: bool disable_cache = 2;
-   */
-  disableCache: boolean;
-};
+    /**
+     * @generated from field: bool disable_cache = 2;
+     */
+    disableCache: boolean;
+  };
 
 /**
  * Describes the message api.v1.QueueSourceItemRequest.
  * Use `create(QueueSourceItemRequestSchema)` to create a new message.
  */
-export const QueueSourceItemRequestSchema: GenMessage<QueueSourceItemRequest> = /*@__PURE__*/
+export const QueueSourceItemRequestSchema: GenMessage<QueueSourceItemRequest> =
+  /*@__PURE__*/
   messageDesc(file_api_v1_api, 8);
 
 /**
  * @generated from message api.v1.QueueSourceItemResponse
  */
-export type QueueSourceItemResponse = Message<"api.v1.QueueSourceItemResponse"> & {
-  /**
-   * @generated from field: string id = 1;
-   */
-  id: string;
-};
+export type QueueSourceItemResponse =
+  Message<"api.v1.QueueSourceItemResponse"> & {
+    /**
+     * @generated from field: string id = 1;
+     */
+    id: string;
+  };
 
 /**
  * Describes the message api.v1.QueueSourceItemResponse.
  * Use `create(QueueSourceItemResponseSchema)` to create a new message.
  */
-export const QueueSourceItemResponseSchema: GenMessage<QueueSourceItemResponse> = /*@__PURE__*/
+export const QueueSourceItemResponseSchema: GenMessage<QueueSourceItemResponse> =
+  /*@__PURE__*/
   messageDesc(file_api_v1_api, 9);
 
 /**
@@ -227,7 +252,8 @@ export type GetSourceItemRequest = Message<"api.v1.GetSourceItemRequest"> & {
  * Describes the message api.v1.GetSourceItemRequest.
  * Use `create(GetSourceItemRequestSchema)` to create a new message.
  */
-export const GetSourceItemRequestSchema: GenMessage<GetSourceItemRequest> = /*@__PURE__*/
+export const GetSourceItemRequestSchema: GenMessage<GetSourceItemRequest> =
+  /*@__PURE__*/
   messageDesc(file_api_v1_api, 10);
 
 /**
@@ -254,120 +280,132 @@ export type GetSourceItemResponse = Message<"api.v1.GetSourceItemResponse"> & {
  * Describes the message api.v1.GetSourceItemResponse.
  * Use `create(GetSourceItemResponseSchema)` to create a new message.
  */
-export const GetSourceItemResponseSchema: GenMessage<GetSourceItemResponse> = /*@__PURE__*/
+export const GetSourceItemResponseSchema: GenMessage<GetSourceItemResponse> =
+  /*@__PURE__*/
   messageDesc(file_api_v1_api, 11);
 
 /**
  * @generated from message api.v1.QueueSourceCollectionRequest
  */
-export type QueueSourceCollectionRequest = Message<"api.v1.QueueSourceCollectionRequest"> & {
-  /**
-   * @generated from field: string url = 1;
-   */
-  url: string;
+export type QueueSourceCollectionRequest =
+  Message<"api.v1.QueueSourceCollectionRequest"> & {
+    /**
+     * @generated from field: string url = 1;
+     */
+    url: string;
 
-  /**
-   * @generated from field: bool disable_cache = 2;
-   */
-  disableCache: boolean;
-};
+    /**
+     * @generated from field: bool disable_cache = 2;
+     */
+    disableCache: boolean;
+  };
 
 /**
  * Describes the message api.v1.QueueSourceCollectionRequest.
  * Use `create(QueueSourceCollectionRequestSchema)` to create a new message.
  */
-export const QueueSourceCollectionRequestSchema: GenMessage<QueueSourceCollectionRequest> = /*@__PURE__*/
+export const QueueSourceCollectionRequestSchema: GenMessage<QueueSourceCollectionRequest> =
+  /*@__PURE__*/
   messageDesc(file_api_v1_api, 12);
 
 /**
  * @generated from message api.v1.QueueSourceCollectionResponse
  */
-export type QueueSourceCollectionResponse = Message<"api.v1.QueueSourceCollectionResponse"> & {
-  /**
-   * @generated from field: string id = 1;
-   */
-  id: string;
-};
+export type QueueSourceCollectionResponse =
+  Message<"api.v1.QueueSourceCollectionResponse"> & {
+    /**
+     * @generated from field: string id = 1;
+     */
+    id: string;
+  };
 
 /**
  * Describes the message api.v1.QueueSourceCollectionResponse.
  * Use `create(QueueSourceCollectionResponseSchema)` to create a new message.
  */
-export const QueueSourceCollectionResponseSchema: GenMessage<QueueSourceCollectionResponse> = /*@__PURE__*/
+export const QueueSourceCollectionResponseSchema: GenMessage<QueueSourceCollectionResponse> =
+  /*@__PURE__*/
   messageDesc(file_api_v1_api, 13);
 
 /**
  * @generated from message api.v1.GetSourceCollectionRequest
  */
-export type GetSourceCollectionRequest = Message<"api.v1.GetSourceCollectionRequest"> & {
-  /**
-   * @generated from field: string id = 1;
-   */
-  id: string;
-};
+export type GetSourceCollectionRequest =
+  Message<"api.v1.GetSourceCollectionRequest"> & {
+    /**
+     * @generated from field: string id = 1;
+     */
+    id: string;
+  };
 
 /**
  * Describes the message api.v1.GetSourceCollectionRequest.
  * Use `create(GetSourceCollectionRequestSchema)` to create a new message.
  */
-export const GetSourceCollectionRequestSchema: GenMessage<GetSourceCollectionRequest> = /*@__PURE__*/
+export const GetSourceCollectionRequestSchema: GenMessage<GetSourceCollectionRequest> =
+  /*@__PURE__*/
   messageDesc(file_api_v1_api, 14);
 
 /**
  * @generated from message api.v1.GetSourceCollectionResponse
  */
-export type GetSourceCollectionResponse = Message<"api.v1.GetSourceCollectionResponse"> & {
-  /**
-   * @generated from field: api.v1.JobStatus status = 1;
-   */
-  status: JobStatus;
+export type GetSourceCollectionResponse =
+  Message<"api.v1.GetSourceCollectionResponse"> & {
+    /**
+     * @generated from field: api.v1.JobStatus status = 1;
+     */
+    status: JobStatus;
 
-  /**
-   * @generated from field: optional api.v1.SourceCollection collection = 2;
-   */
-  collection?: SourceCollection | undefined;
+    /**
+     * @generated from field: optional api.v1.SourceCollection collection = 2;
+     */
+    collection?: SourceCollection | undefined;
 
-  /**
-   * @generated from field: repeated api.v1.SourceSummary sources = 3;
-   */
-  sources: SourceSummary[];
-};
+    /**
+     * @generated from field: repeated api.v1.SourceSummary sources = 3;
+     */
+    sources: SourceSummary[];
+  };
 
 /**
  * Describes the message api.v1.GetSourceCollectionResponse.
  * Use `create(GetSourceCollectionResponseSchema)` to create a new message.
  */
-export const GetSourceCollectionResponseSchema: GenMessage<GetSourceCollectionResponse> = /*@__PURE__*/
+export const GetSourceCollectionResponseSchema: GenMessage<GetSourceCollectionResponse> =
+  /*@__PURE__*/
   messageDesc(file_api_v1_api, 15);
 
 /**
  * @generated from message api.v1.GetSourceCollectionsRequest
  */
-export type GetSourceCollectionsRequest = Message<"api.v1.GetSourceCollectionsRequest"> & {
-};
+export type GetSourceCollectionsRequest =
+  Message<"api.v1.GetSourceCollectionsRequest"> & {};
 
 /**
  * Describes the message api.v1.GetSourceCollectionsRequest.
  * Use `create(GetSourceCollectionsRequestSchema)` to create a new message.
  */
-export const GetSourceCollectionsRequestSchema: GenMessage<GetSourceCollectionsRequest> = /*@__PURE__*/
+export const GetSourceCollectionsRequestSchema: GenMessage<GetSourceCollectionsRequest> =
+  /*@__PURE__*/
   messageDesc(file_api_v1_api, 16);
 
 /**
  * @generated from message api.v1.GetSourceCollectionsResponse
  */
-export type GetSourceCollectionsResponse = Message<"api.v1.GetSourceCollectionsResponse"> & {
-  /**
-   * @generated from field: repeated api.v1.SourceCollection collection = 1;
-   */
-  collection: SourceCollection[];
-};
+export type GetSourceCollectionsResponse =
+  Message<"api.v1.GetSourceCollectionsResponse"> & {
+    /**
+     * @generated from field: repeated api.v1.SourceCollection collection = 1;
+     */
+    collection: SourceCollection[];
+  };
 
 /**
  * Describes the message api.v1.GetSourceCollectionsResponse.
  * Use `create(GetSourceCollectionsResponseSchema)` to create a new message.
  */
-export const GetSourceCollectionsResponseSchema: GenMessage<GetSourceCollectionsResponse> = /*@__PURE__*/
+export const GetSourceCollectionsResponseSchema: GenMessage<GetSourceCollectionsResponse> =
+  /*@__PURE__*/
   messageDesc(file_api_v1_api, 17);
 
 /**
@@ -394,7 +432,8 @@ export type SourceSummary = Message<"api.v1.SourceSummary"> & {
  * Describes the message api.v1.SourceSummary.
  * Use `create(SourceSummarySchema)` to create a new message.
  */
-export const SourceSummarySchema: GenMessage<SourceSummary> = /*@__PURE__*/
+export const SourceSummarySchema: GenMessage<SourceSummary> =
+  /*@__PURE__*/
   messageDesc(file_api_v1_api, 18);
 
 /**
@@ -436,7 +475,8 @@ export type SourceCollection = Message<"api.v1.SourceCollection"> & {
  * Describes the message api.v1.SourceCollection.
  * Use `create(SourceCollectionSchema)` to create a new message.
  */
-export const SourceCollectionSchema: GenMessage<SourceCollection> = /*@__PURE__*/
+export const SourceCollectionSchema: GenMessage<SourceCollection> =
+  /*@__PURE__*/
   messageDesc(file_api_v1_api, 19);
 
 /**
@@ -472,7 +512,8 @@ export enum JobStatus {
 /**
  * Describes the enum api.v1.JobStatus.
  */
-export const JobStatusSchema: GenEnum<JobStatus> = /*@__PURE__*/
+export const JobStatusSchema: GenEnum<JobStatus> =
+  /*@__PURE__*/
   enumDesc(file_api_v1_api, 0);
 
 /**
@@ -486,7 +527,7 @@ export const KatariveService: GenService<{
     methodKind: "unary";
     input: typeof QueueNarrationRequestSchema;
     output: typeof QueueNarrationResponseSchema;
-  },
+  };
   /**
    * @generated from rpc api.v1.KatariveService.GetNarration
    */
@@ -494,7 +535,7 @@ export const KatariveService: GenService<{
     methodKind: "unary";
     input: typeof GetNarrationRequestSchema;
     output: typeof GetNarrationResponseSchema;
-  },
+  };
   /**
    * @generated from rpc api.v1.KatariveService.GetNarrators
    */
@@ -502,7 +543,7 @@ export const KatariveService: GenService<{
     methodKind: "unary";
     input: typeof GetNarratorsRequestSchema;
     output: typeof GetNarratorsResponseSchema;
-  },
+  };
   /**
    * @generated from rpc api.v1.KatariveService.QueueSourceItem
    */
@@ -510,7 +551,7 @@ export const KatariveService: GenService<{
     methodKind: "unary";
     input: typeof QueueSourceItemRequestSchema;
     output: typeof QueueSourceItemResponseSchema;
-  },
+  };
   /**
    * @generated from rpc api.v1.KatariveService.GetSourceItem
    */
@@ -518,7 +559,7 @@ export const KatariveService: GenService<{
     methodKind: "unary";
     input: typeof GetSourceItemRequestSchema;
     output: typeof GetSourceItemResponseSchema;
-  },
+  };
   /**
    * @generated from rpc api.v1.KatariveService.QueueSourceCollection
    */
@@ -526,7 +567,7 @@ export const KatariveService: GenService<{
     methodKind: "unary";
     input: typeof QueueSourceCollectionRequestSchema;
     output: typeof QueueSourceCollectionResponseSchema;
-  },
+  };
   /**
    * @generated from rpc api.v1.KatariveService.GetSourceCollection
    */
@@ -534,7 +575,7 @@ export const KatariveService: GenService<{
     methodKind: "unary";
     input: typeof GetSourceCollectionRequestSchema;
     output: typeof GetSourceCollectionResponseSchema;
-  },
+  };
   /**
    * @generated from rpc api.v1.KatariveService.GetSourceCollections
    */
@@ -542,7 +583,5 @@ export const KatariveService: GenService<{
     methodKind: "unary";
     input: typeof GetSourceCollectionsRequestSchema;
     output: typeof GetSourceCollectionsResponseSchema;
-  },
-}> = /*@__PURE__*/
-  serviceDesc(file_api_v1_api, 0);
-
+  };
+}> = /*@__PURE__*/ serviceDesc(file_api_v1_api, 0);

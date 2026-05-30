@@ -1,10 +1,10 @@
 import { createClient } from "@connectrpc/connect";
-import { createConnectTransport } from "@connectrpc/connect-web";
+import { createGrpcWebTransport } from "@connectrpc/connect-web";
 import { KatariveService } from "../gen/api/v1/api_pb";
 import type { KatariveClient } from "./client";
 
 export function createConnectClient(baseUrl: string): KatariveClient {
-  const transport = createConnectTransport({ baseUrl });
+  const transport = createGrpcWebTransport({ baseUrl });
   const rpc = createClient(KatariveService, transport);
 
   return {
