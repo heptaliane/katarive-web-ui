@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useApp } from "../store/AppContext";
 import { JobStatus } from "../gen/api/v1/api_pb";
 
@@ -5,7 +6,7 @@ function StatusBadge({ status }: { status: JobStatus }) {
   const map: Record<JobStatus, { label: string; className: string }> = {
     [JobStatus.UNSPECIFIED]: { label: "—", className: "status-unspecified" },
     [JobStatus.PROGRESSING]: {
-      label: "Progressing",
+      label: "Processing...",
       className: "status-progressing",
     },
     [JobStatus.COMPLETED]: {
@@ -14,7 +15,7 @@ function StatusBadge({ status }: { status: JobStatus }) {
     },
     [JobStatus.FAILED]: { label: "Failed", className: "status-failed" },
     [JobStatus.NOT_FOUND]: {
-      label: "Not Found",
+      label: "Not found",
       className: "status-not-found",
     },
   };
@@ -22,21 +23,24 @@ function StatusBadge({ status }: { status: JobStatus }) {
   return <span className={`status-badge ${className}`}>{label}</span>;
 }
 
+const CONTENT_COLLAPSED_LINES = 4;
+
 export function SourceItemNarration() {
-  const { state } = useApp();
+  const { state, retryNarration } = useApp();
   const {
-    selectedSourceItemId,
+    selectedSourceItemUrl,
     sourceItemLoading,
     sourceItemStatus,
-    sourceItemMetadata,
-    sourceItemContent,
+    sourceItem,
     narration,
   } = state;
 
-  if (!selectedSourceItemId && !sourceItemLoading) {
+  const [contentExpanded, setContentExpanded] = useState(false);
+
+  if (!selectedSourceItemUrl && !sourceItemLoading) {
     return (
       <section className="panel source-item-narration empty">
-        <div className="panel-empty">Select Item</div>
+        <div className="panel-empty">Select an item or enter a URL</div>
       </section>
     );
   }
@@ -47,60 +51,73 @@ export function SourceItemNarration() {
         <div className="panel-loading">Loading...</div>
       ) : (
         <>
+          {/* Title + status */}
           <div className="panel-header">
-            {sourceItemMetadata?.title ?? "SourceItem"}
+            {sourceItem?.title ?? "Source Item"}
             {sourceItemStatus !== null && (
               <StatusBadge status={sourceItemStatus} />
             )}
           </div>
 
-          {sourceItemMetadata?.url && (
+          {/* Audio player — directly below the title */}
+          {narration && (
+            <div className="narration-audio-area">
+              {narration.status === JobStatus.COMPLETED &&
+              narration.audioPath ? (
+                <audio
+                  className="narration-audio"
+                  controls
+                  src={narration.audioPath}
+                />
+              ) : narration.status === JobStatus.PROGRESSING ? (
+                <div className="narration-waiting">Generating audio...</div>
+              ) : narration.status === JobStatus.FAILED ? (
+                <div className="narration-error">
+                  Generation failed.{" "}
+                  <button
+                    className="narration-retry-btn"
+                    onClick={retryNarration}
+                  >
+                    Retry
+                  </button>
+                </div>
+              ) : null}
+            </div>
+          )}
+
+          {/* URL link */}
+          {sourceItem?.url && (
             <a
               className="source-item-url-link"
-              href={sourceItemMetadata.url}
+              href={sourceItem.url}
               target="_blank"
               rel="noreferrer"
             >
-              {sourceItemMetadata.url}
+              {sourceItem.url}
             </a>
           )}
 
-          {sourceItemContent && (
-            <div className="source-item-content">{sourceItemContent}</div>
+          {/* Content with collapse */}
+          {sourceItem?.content && (
+            <div className="source-item-content-wrapper">
+              <div
+                className={`source-item-content ${contentExpanded ? "expanded" : "collapsed"}`}
+                style={
+                  contentExpanded
+                    ? undefined
+                    : { WebkitLineClamp: CONTENT_COLLAPSED_LINES }
+                }
+              >
+                {sourceItem.content}
+              </div>
+              <button
+                className="content-toggle-btn"
+                onClick={() => setContentExpanded((v) => !v)}
+              >
+                {contentExpanded ? "Show less ▲" : "Show more ▼"}
+              </button>
+            </div>
           )}
-
-          {/* Narration Area */}
-          <div className="narration-area">
-            <div className="narration-area-header">Narration</div>
-            {narration ? (
-              <div className="narration-status">
-                <StatusBadge status={narration.status} />
-                {narration.status === JobStatus.COMPLETED &&
-                  narration.audioPath && (
-                    <audio
-                      className="narration-audio"
-                      controls
-                      src={narration.audioPath}
-                    />
-                  )}
-                {narration.status === JobStatus.PROGRESSING && (
-                  <div className="narration-waiting">
-                    Generating narration...
-                  </div>
-                )}
-                {narration.status === JobStatus.FAILED && (
-                  <div className="narration-error">
-                    Failed to generate narration
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div className="narration-empty">
-                Enter the URL in the header and press 'Create' to generate
-                narration.
-              </div>
-            )}
-          </div>
         </>
       )}
     </section>

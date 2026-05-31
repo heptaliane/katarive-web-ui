@@ -4,35 +4,26 @@ import type {
   GetSourceCollectionResponse,
   GetSourceCollectionsResponse,
   GetSourceItemResponse,
-  QueueNarrationResponse,
-  QueueSourceCollectionResponse,
-  QueueSourceItemResponse,
 } from "../gen/api/v1/api_pb";
 
 export interface KatariveClient {
-  queueNarration(params: {
+  getNarration(params: {
     url: string;
     narrator: string;
     speakerId: number;
-  }): Promise<QueueNarrationResponse>;
-
-  getNarration(id: string): Promise<GetNarrationResponse>;
+  }): Promise<GetNarrationResponse>;
 
   getNarrators(): Promise<GetNarratorsResponse>;
 
-  queueSourceItem(params: {
+  getSourceItem(params: {
     url: string;
     disableCache?: boolean;
-  }): Promise<QueueSourceItemResponse>;
+  }): Promise<GetSourceItemResponse>;
 
-  getSourceItem(id: string): Promise<GetSourceItemResponse>;
-
-  queueSourceCollection(params: {
+  getSourceCollection(params: {
     url: string;
     disableCache?: boolean;
-  }): Promise<QueueSourceCollectionResponse>;
-
-  getSourceCollection(id: string): Promise<GetSourceCollectionResponse>;
+  }): Promise<GetSourceCollectionResponse>;
 
   getSourceCollections(): Promise<GetSourceCollectionsResponse>;
 }

@@ -1,14 +1,21 @@
-import type {
-  Narrator,
-  SourceCollection,
-  SourceSummary,
+import { create } from "@bufbuild/protobuf";
+import {
+  GetNarrationResponseSchema,
+  GetNarratorsResponseSchema,
+  GetSourceCollectionResponseSchema,
+  GetSourceCollectionsResponseSchema,
+  GetSourceItemResponseSchema,
+  JobStatus,
+  NarratorSchema,
+  SourceCollectionSchema,
+  SourceItemSchema,
+  SourceSummarySchema,
+  SpeakerSchema,
 } from "../gen/api/v1/api_pb";
-import { JobStatus } from "../gen/api/v1/api_pb";
 import type { KatariveClient } from "./client";
 
-const STUB_COLLECTIONS: SourceCollection[] = [
-  {
-    $typeName: "api.v1.SourceCollection",
+const STUB_COLLECTIONS = [
+  create(SourceCollectionSchema, {
     id: "col-1",
     url: "https://example.com/blog",
     title: "Tech Blog",
@@ -16,170 +23,150 @@ const STUB_COLLECTIONS: SourceCollection[] = [
       "A curated collection of technical articles for software engineers.",
     author: "Tech Writer",
     tags: ["engineering", "tech"],
-  },
-  {
-    $typeName: "api.v1.SourceCollection",
+  }),
+  create(SourceCollectionSchema, {
     id: "col-2",
     url: "https://example.com/news",
     title: "News Digest",
     description: "A collection of the latest global news.",
     author: "News Bot",
     tags: ["news", "daily"],
-  },
+  }),
 ];
 
-const STUB_SOURCES: Record<string, SourceSummary[]> = {
-  "col-1": [
-    {
-      $typeName: "api.v1.SourceSummary",
+const STUB_ITEMS: Record<
+  string,
+  ReturnType<typeof create<typeof SourceSummarySchema>>[]
+> = {
+  "https://example.com/blog": [
+    create(SourceSummarySchema, {
       id: "src-1",
       url: "https://example.com/blog/1",
       title: "Getting Started with Protobuf",
-    },
-    {
-      $typeName: "api.v1.SourceSummary",
+    }),
+    create(SourceSummarySchema, {
       id: "src-2",
       url: "https://example.com/blog/2",
       title: "gRPC Communication with connect-es",
-    },
-    {
-      $typeName: "api.v1.SourceSummary",
+    }),
+    create(SourceSummarySchema, {
       id: "src-3",
       url: "https://example.com/blog/3",
       title: "Setting Up a React + Vite Environment",
-    },
+    }),
   ],
-  "col-2": [
-    {
-      $typeName: "api.v1.SourceSummary",
+  "https://example.com/news": [
+    create(SourceSummarySchema, {
       id: "src-4",
       url: "https://example.com/news/1",
       title: "Latest Trends in AI",
-    },
-    {
-      $typeName: "api.v1.SourceSummary",
+    }),
+    create(SourceSummarySchema, {
       id: "src-5",
       url: "https://example.com/news/2",
       title: "Weekly OSS Roundup",
-    },
+    }),
   ],
 };
 
-const STUB_NARRATORS: Narrator[] = [
-  {
-    $typeName: "api.v1.Narrator",
+const STUB_NARRATORS = [
+  create(NarratorSchema, {
     name: "voicevox",
     speakers: [
-      { $typeName: "api.v1.Speaker", id: 1, label: "Speaker 1" },
-      { $typeName: "api.v1.Speaker", id: 2, label: "Speaker 2" },
-      { $typeName: "api.v1.Speaker", id: 3, label: "Speaker 3" },
+      create(SpeakerSchema, { id: 1, label: "Speaker 1" }),
+      create(SpeakerSchema, { id: 2, label: "Speaker 2" }),
+      create(SpeakerSchema, { id: 3, label: "Speaker 3" }),
     ],
-  },
+  }),
 ];
 
-// -----------------
-// Polling functions
-// -----------------
+// -----------------------------------------------------------------------
+// Polling simulation
+// Track the number of calls using the URL as the key.
+// Simulate a reset and retry by setting `disableCache=true`.
+// -----------------------------------------------------------------------
+
 const jobCallCount = new Map<string, number>();
 
-function simulateJobStatus(id: string, completesAfter = 3): JobStatus {
-  const count = (jobCallCount.get(id) ?? 0) + 1;
-  jobCallCount.set(id, count);
+function simulateJobStatus(
+  key: string,
+  completesAfter: number,
+  disableCache: boolean,
+): JobStatus {
+  if (disableCache) jobCallCount.delete(key);
+  const count = (jobCallCount.get(key) ?? 0) + 1;
+  jobCallCount.set(key, count);
   if (count >= completesAfter) return JobStatus.COMPLETED;
   return JobStatus.PROGRESSING;
 }
 
-let idCounter = 1000;
-function nextId(prefix: string) {
-  return `${prefix}-${++idCounter}`;
-}
-
 const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-// --------------------------
-// Stub client implementation
-// --------------------------
+// -----------------------------------------------------------------------
+// Stub client
+// -----------------------------------------------------------------------
 
 export function createStubClient(): KatariveClient {
   return {
-    async queueNarration({ url, narrator, speakerId }) {
-      await delay(300);
-      const id = nextId("narration");
-      console.log("[stub] queueNarration", { url, narrator, speakerId, id });
-      return { $typeName: "api.v1.QueueNarrationResponse", id };
-    },
-
-    async getNarration(id) {
+    async getNarration({ url, narrator, speakerId }) {
       await delay(500);
-      const status = simulateJobStatus(id);
-      console.log("[stub] getNarration", { id, status });
-      return {
-        $typeName: "api.v1.GetNarrationResponse",
+      const key = `narration:${url}:${narrator}:${speakerId}`;
+      const status = simulateJobStatus(key, 4, false);
+      console.log("[stub] getNarration", { url, narrator, speakerId, status });
+      return create(GetNarrationResponseSchema, {
         status,
         path: status === JobStatus.COMPLETED ? "/audio/stub.mp3" : undefined,
-        source: undefined,
-      };
+      });
     },
 
     async getNarrators() {
       await delay(200);
-      return {
-        $typeName: "api.v1.GetNarratorsResponse",
-        narrator: STUB_NARRATORS,
-      };
+      return create(GetNarratorsResponseSchema, { narrator: STUB_NARRATORS });
     },
 
-    async queueSourceItem({ url, disableCache = false }) {
-      await delay(300);
-      const id = nextId("src");
-      console.log("[stub] queueSourceItem", { url, disableCache, id });
-      return { $typeName: "api.v1.QueueSourceItemResponse", id };
-    },
-
-    async getSourceItem(id) {
+    async getSourceItem({ url, disableCache = false }) {
       await delay(400);
-      const status = simulateJobStatus(id, 2);
-      return {
-        $typeName: "api.v1.GetSourceItemResponse",
+      const status = simulateJobStatus(`item:${url}`, 2, disableCache);
+      console.log("[stub] getSourceItem", { url, disableCache, status });
+
+      const collection = STUB_COLLECTIONS.find((c) => url.startsWith(c.url));
+
+      return create(GetSourceItemResponseSchema, {
         status,
-        metadata: {
-          $typeName: "api.v1.SourceSummary",
-          id,
-          url: "https://example.com/stub",
-          title: "Stub Article Title",
-        },
-        content:
+        item:
           status === JobStatus.COMPLETED
-            ? "This is stub content. The actual body text will be displayed once connected to the real API."
+            ? create(SourceItemSchema, {
+                id: `item-${url}`,
+                url,
+                title: "Stub Article Title",
+                content:
+                  "This is stub content. The actual body text will be displayed once connected to the real API.",
+              })
             : undefined,
-      };
+        collection: collection,
+      });
     },
 
-    async queueSourceCollection({ url, disableCache = false }) {
-      await delay(300);
-      const id = nextId("col");
-      console.log("[stub] queueSourceCollection", { url, disableCache, id });
-      return { $typeName: "api.v1.QueueSourceCollectionResponse", id };
-    },
-
-    async getSourceCollection(id) {
+    async getSourceCollection({ url, disableCache = false }) {
       await delay(400);
-      const collection = STUB_COLLECTIONS.find((c) => c.id === id);
-      const sources = STUB_SOURCES[id] ?? [];
-      return {
-        $typeName: "api.v1.GetSourceCollectionResponse",
-        status: JobStatus.COMPLETED,
-        collection,
-        sources,
-      };
+      const status = simulateJobStatus(`collection:${url}`, 2, disableCache);
+      console.log("[stub] getSourceCollection", { url, disableCache, status });
+
+      const collection = STUB_COLLECTIONS.find((c) => c.url === url);
+      const items = STUB_ITEMS[url] ?? [];
+
+      return create(GetSourceCollectionResponseSchema, {
+        status,
+        collection: status === JobStatus.COMPLETED ? collection : undefined,
+        items: status === JobStatus.COMPLETED ? items : [],
+      });
     },
 
     async getSourceCollections() {
       await delay(400);
-      return {
-        $typeName: "api.v1.GetSourceCollectionsResponse",
+      return create(GetSourceCollectionsResponseSchema, {
         collection: STUB_COLLECTIONS,
-      };
+      });
     },
   };
 }

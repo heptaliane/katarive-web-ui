@@ -132,7 +132,7 @@
 }
 
 /* ----------------------------------------
-   Panels (Common)
+   Panels (common)
 ---------------------------------------- */
 .panel {
   display: flex;
@@ -385,4 +385,60 @@
 .status-unspecified {
   background: var(--color-surface-2);
   color: var(--color-text-muted);
+}
+
+/* ----------------------------------------
+   Narration audio area (below title)
+---------------------------------------- */
+.narration-audio-area {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.narration-audio {
+  width: 100%;
+}
+
+.narration-waiting {
+  font-size: 13px;
+  color: var(--color-warn);
+}
+
+/* ----------------------------------------
+   Source item content collapse
+---------------------------------------- */
+.source-item-content-wrapper {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.source-item-content {
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--color-text);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.source-item-content.collapsed {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.source-item-content.expanded {
+  display: block;
+}
+
+.content-toggle-btn {
+  margin-top: 6px;
+  background: none;
+  border: none;
+  color: var(--color-accent);
+  font-size: 12px;
+  cursor: pointer;
+  padding: 0;
+}
+.content-toggle-btn:hover {
+  text-decoration: underline;
 }

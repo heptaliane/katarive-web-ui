@@ -1,14 +1,23 @@
 import { useApp } from "../store/AppContext";
 
 export function Header() {
-  const { state, setInputUrl, setNarrator, setSpeakerId, startNarration } =
-    useApp();
+  const {
+    state,
+    setInputUrl,
+    setNarrator,
+    setSpeakerId,
+    loadSourceItemFromUrl,
+  } = useApp();
   const { inputUrl, selectedNarrator, selectedSpeakerId, narrators } = state;
 
   const selectedNarratorObj = narrators.find(
     (n) => n.name === selectedNarrator,
   );
-  const canStart = inputUrl.trim() !== "" && selectedSpeakerId !== null;
+  const canLoad = inputUrl.trim() !== "";
+
+  const handleLoad = () => {
+    if (canLoad) loadSourceItemFromUrl(inputUrl.trim());
+  };
 
   return (
     <header className="header">
@@ -17,9 +26,10 @@ export function Header() {
         <input
           className="header-url-input"
           type="url"
-          placeholder="https://example.com"
+          placeholder="Enter URL..."
           value={inputUrl}
           onChange={(e) => setInputUrl(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleLoad()}
         />
         <select
           className="header-select"
@@ -44,12 +54,12 @@ export function Header() {
           ))}
         </select>
         <button
-          className={`header-narration-btn ${canStart ? "active" : "disabled"}`}
-          onClick={startNarration}
-          disabled={!canStart}
-          title="Generate Narration"
+          className={`header-load-btn ${canLoad ? "active" : "disabled"}`}
+          onClick={handleLoad}
+          disabled={!canLoad}
+          title="Load source item"
         >
-          Generate Narration
+          Load
         </button>
       </div>
     </header>

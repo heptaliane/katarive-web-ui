@@ -4,15 +4,15 @@ export function SourceCollectionDetail() {
   const { state, selectSourceItem } = useApp();
   const {
     selectedCollection,
-    collectionSources,
+    collectionItems,
     collectionDetailLoading,
-    selectedSourceItemId,
+    selectedSourceItemUrl,
   } = state;
 
   if (!selectedCollection && !collectionDetailLoading) {
     return (
       <section className="panel source-collection-detail empty">
-        <div className="panel-empty">Select Collection</div>
+        <div className="panel-empty">Select a collection</div>
       </section>
     );
   }
@@ -40,17 +40,17 @@ export function SourceCollectionDetail() {
             </p>
           )}
           <div className="source-list-header">
-            Items ({collectionSources.length})
+            Items ({collectionItems.length})
           </div>
           <ul className="source-list">
-            {collectionSources.map((src) => (
+            {collectionItems.map((item) => (
               <li
-                key={src.id}
-                className={`source-item ${src.id === selectedSourceItemId ? "selected" : ""}`}
-                onClick={() => selectSourceItem(src.id)}
+                key={item.id}
+                className={`source-item ${item.url === selectedSourceItemUrl ? "selected" : ""}`}
+                onClick={() => selectSourceItem(item.url)}
               >
-                <div className="source-item-title">{src.title}</div>
-                <div className="source-item-url">{src.url}</div>
+                <div className="source-item-title">{item.title}</div>
+                <div className="source-item-url">{item.url}</div>
               </li>
             ))}
           </ul>
