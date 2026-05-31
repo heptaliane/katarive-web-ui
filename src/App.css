@@ -494,3 +494,96 @@
   opacity: 0.4;
   cursor: not-allowed;
 }
+
+/* ----------------------------------------
+   Batch narration
+---------------------------------------- */
+.source-list-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.batch-btn {
+  background: none;
+  border: none;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 2px 8px;
+  border-radius: 4px;
+  transition:
+    color 0.15s,
+    background 0.15s;
+}
+.batch-btn.active {
+  color: var(--color-accent);
+}
+.batch-btn.active:hover {
+  background: var(--color-surface-2);
+}
+.batch-btn.cancel {
+  color: var(--color-error);
+}
+.batch-btn.cancel:hover {
+  background: var(--color-surface-2);
+}
+.batch-btn.disabled {
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.batch-progress-area {
+  padding: 6px 16px 8px;
+  border-bottom: 1px solid var(--color-border);
+}
+.batch-progress-label {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  margin-bottom: 4px;
+}
+.batch-progress-bar {
+  height: 4px;
+  background: var(--color-surface-2);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.batch-progress-fill {
+  height: 100%;
+  background: var(--color-accent);
+  border-radius: 99px;
+  transition: width 0.4s ease;
+}
+
+/* Batch status per item */
+.source-item.batch-completed {
+  border-left: 2px solid var(--color-success);
+}
+.source-item.batch-progressing {
+  border-left: 2px solid var(--color-warn);
+}
+.source-item.batch-failed {
+  border-left: 2px solid var(--color-error);
+}
+
+.batch-status-icon {
+  margin-left: 6px;
+  font-size: 11px;
+  color: var(--color-success);
+}
+.batch-status-icon.failed {
+  color: var(--color-error);
+}
+.batch-status-icon.spinning {
+  display: inline-block;
+  color: var(--color-warn);
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

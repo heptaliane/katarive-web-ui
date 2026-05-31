@@ -30,6 +30,19 @@ export interface NarrationState {
   audioPath?: string;
 }
 
+export interface BatchNarrationItem {
+  url: string;
+  title: string;
+  status: JobStatus;
+  audioPath?: string;
+}
+
+export interface BatchNarrationState {
+  items: BatchNarrationItem[];
+  currentIndex: number;
+  isRunning: boolean;
+}
+
 export interface AppState {
   // Header
   inputUrl: string;
@@ -57,6 +70,9 @@ export interface AppState {
 
   // Narration
   narration: NarrationState | null;
+
+  // Batch narration
+  batchNarration: BatchNarrationState | null;
 }
 
 const initialState: AppState = {
@@ -80,6 +96,8 @@ const initialState: AppState = {
   sourceItemLoading: false,
 
   narration: null,
+
+  batchNarration: null,
 };
 
 // -----------------------------------------------------------------------
@@ -103,7 +121,17 @@ type Action =
   | { type: "SET_SOURCE_ITEM_LOADING"; url: string }
   | { type: "SET_SOURCE_ITEM"; status: JobStatus; item?: SourceItem }
   | { type: "SET_NARRATION"; narration: NarrationState }
-  | { type: "UPDATE_NARRATION_STATUS"; status: JobStatus; audioPath?: string };
+  | { type: "UPDATE_NARRATION_STATUS"; status: JobStatus; audioPath?: string }
+  | { type: "START_BATCH_NARRATION"; items: BatchNarrationItem[] }
+  | {
+      type: "UPDATE_BATCH_ITEM";
+      index: number;
+      status: JobStatus;
+      audioPath?: string;
+    }
+  | { type: "ADVANCE_BATCH"; nextIndex: number }
+  | { type: "FINISH_BATCH" }
+  | { type: "CANCEL_BATCH" };
 
 // -----------------------------------------------------------------------
 // Reducer
@@ -194,6 +222,50 @@ function reducer(state: AppState, action: Action): AppState {
         },
       };
 
+    case "START_BATCH_NARRATION":
+      return {
+        ...state,
+        batchNarration: {
+          items: action.items,
+          currentIndex: 0,
+          isRunning: true,
+        },
+      };
+    case "UPDATE_BATCH_ITEM":
+      if (!state.batchNarration) return state;
+      return {
+        ...state,
+        batchNarration: {
+          ...state.batchNarration,
+          items: state.batchNarration.items.map((item, i) =>
+            i === action.index
+              ? {
+                  ...item,
+                  status: action.status,
+                  audioPath: action.audioPath ?? item.audioPath,
+                }
+              : item,
+          ),
+        },
+      };
+    case "ADVANCE_BATCH":
+      if (!state.batchNarration) return state;
+      return {
+        ...state,
+        batchNarration: {
+          ...state.batchNarration,
+          currentIndex: action.nextIndex,
+        },
+      };
+    case "FINISH_BATCH":
+      if (!state.batchNarration) return state;
+      return {
+        ...state,
+        batchNarration: { ...state.batchNarration, isRunning: false },
+      };
+    case "CANCEL_BATCH":
+      return { ...state, batchNarration: null };
+
     default:
       return state;
   }
@@ -221,6 +293,12 @@ interface AppContextValue {
   retryNarration: () => void;
   // Refresh CollectionDetail with disableCache=true
   refreshCollectionDetail: () => void;
+  // Start batch narration for all items in the current collection
+  startBatchNarration: () => void;
+  // Cancel batch narration
+  cancelBatchNarration: () => void;
+  // Select a batch-completed item to view in SourceItemNarration
+  selectBatchItem: (index: number) => void;
 }
 
 const AppContext = createContext<AppContextValue | null>(null);
@@ -460,6 +538,96 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     // Call loadSourceItem(url, true) if SourceItem retry is also needed.
   }, [state.narration]);
 
+  // Batch narration: process all collection items sequentially
+  const startBatchNarration = useCallback(async () => {
+    const { collectionItems, selectedNarrator, selectedSpeakerId } = state;
+    if (
+      !collectionItems.length ||
+      !selectedNarrator ||
+      selectedSpeakerId === null
+    )
+      return;
+
+    const batchItems: BatchNarrationItem[] = collectionItems.map((item) => ({
+      url: item.url,
+      title: item.title,
+      status: JobStatus.PROGRESSING,
+    }));
+    dispatch({ type: "START_BATCH_NARRATION", items: batchItems });
+
+    for (let i = 0; i < batchItems.length; i++) {
+      dispatch({ type: "ADVANCE_BATCH", nextIndex: i });
+      const { url } = batchItems[i];
+
+      // Poll until COMPLETED or FAILED
+      let res = await client.getNarration({
+        url,
+        narrator: selectedNarrator,
+        speakerId: selectedSpeakerId,
+      });
+      while (res.status === JobStatus.PROGRESSING) {
+        await new Promise((r) => setTimeout(r, POLLING_INTERVAL_MS));
+        res = await client.getNarration({
+          url,
+          narrator: selectedNarrator,
+          speakerId: selectedSpeakerId,
+        });
+      }
+      dispatch({
+        type: "UPDATE_BATCH_ITEM",
+        index: i,
+        status: res.status,
+        audioPath: res.path,
+      });
+    }
+
+    dispatch({ type: "FINISH_BATCH" });
+  }, [
+    client,
+    state.collectionItems,
+    state.selectedNarrator,
+    state.selectedSpeakerId,
+  ]);
+
+  const cancelBatchNarration = useCallback(() => {
+    dispatch({ type: "CANCEL_BATCH" });
+  }, []);
+
+  // Select a batch-completed item and show it in SourceItemNarration
+  const selectBatchItem = useCallback(
+    (index: number) => {
+      const { batchNarration } = state;
+      if (!batchNarration) return;
+      const item = batchNarration.items[index];
+      if (item.status !== JobStatus.COMPLETED) return;
+      dispatch({
+        type: "SET_NARRATION",
+        narration: {
+          url: item.url,
+          narrator: state.selectedNarrator,
+          speakerId: state.selectedSpeakerId ?? 0,
+          status: item.status,
+          audioPath: item.audioPath,
+        },
+      });
+      // Also update selectedSourceItemUrl to highlight in the list
+      dispatch({ type: "SET_SOURCE_ITEM_LOADING", url: item.url });
+      client.getSourceItem({ url: item.url }).then((res) => {
+        dispatch({
+          type: "SET_SOURCE_ITEM",
+          status: res.status,
+          item: res.item,
+        });
+      });
+    },
+    [
+      client,
+      state.batchNarration,
+      state.selectedNarrator,
+      state.selectedSpeakerId,
+    ],
+  );
+
   return (
     <AppContext.Provider
       value={{
@@ -474,6 +642,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         startNarration,
         retryNarration,
         refreshCollectionDetail,
+        startBatchNarration,
+        cancelBatchNarration,
+        selectBatchItem,
       }}
     >
       {children}
