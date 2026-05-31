@@ -94,11 +94,7 @@ type Action =
   | { type: "SET_COLLECTIONS_LOADING" }
   | { type: "SET_COLLECTIONS"; collections: SourceCollection[] }
   | { type: "SET_COLLECTION_DETAIL_LOADING"; url: string; silent?: boolean }
-  | {
-      type: "SET_COLLECTION_DETAIL";
-      collection: SourceCollection;
-      items: SourceSummary[];
-    }
+  | { type: "SET_COLLECTION_DETAIL"; collection: SourceCollection; items: SourceSummary[] }
   | { type: "SET_COLLECTION_DETAIL_STATUS"; status: JobStatus }
   | { type: "SET_SOURCE_ITEM_LOADING"; url: string }
   | { type: "SET_SOURCE_ITEM"; status: JobStatus; item?: SourceItem }
@@ -114,11 +110,7 @@ function reducer(state: AppState, action: Action): AppState {
     case "SET_INPUT_URL":
       return { ...state, inputUrl: action.url };
     case "SET_NARRATOR":
-      return {
-        ...state,
-        selectedNarrator: action.narrator,
-        selectedSpeakerId: null,
-      };
+      return { ...state, selectedNarrator: action.narrator, selectedSpeakerId: null };
     case "SET_SPEAKER_ID":
       return { ...state, selectedSpeakerId: action.speakerId };
     case "SET_NARRATORS":
@@ -127,11 +119,7 @@ function reducer(state: AppState, action: Action): AppState {
     case "SET_COLLECTIONS_LOADING":
       return { ...state, collectionsLoading: true };
     case "SET_COLLECTIONS":
-      return {
-        ...state,
-        collections: action.collections,
-        collectionsLoading: false,
-      };
+      return { ...state, collections: action.collections, collectionsLoading: false };
 
     case "SET_COLLECTION_DETAIL_LOADING":
       return {
@@ -141,14 +129,12 @@ function reducer(state: AppState, action: Action): AppState {
         collectionItems: action.silent ? state.collectionItems : [],
         collectionDetailLoading: true,
         // Reset SourceItem selection only when explicitly switching collections
-        ...(action.silent
-          ? {}
-          : {
-              selectedSourceItemUrl: null,
-              sourceItemStatus: null,
-              sourceItem: null,
-              narration: null,
-            }),
+        ...(action.silent ? {} : {
+          selectedSourceItemUrl: null,
+          sourceItemStatus: null,
+          sourceItem: null,
+          narration: null,
+        }),
       };
     case "SET_COLLECTION_DETAIL":
       return {
@@ -159,10 +145,7 @@ function reducer(state: AppState, action: Action): AppState {
       };
     case "SET_COLLECTION_DETAIL_STATUS":
       // Update status only while PROGRESSING (collection data not yet available)
-      return {
-        ...state,
-        collectionDetailLoading: action.status === JobStatus.PROGRESSING,
-      };
+      return { ...state, collectionDetailLoading: action.status === JobStatus.PROGRESSING };
 
     case "SET_SOURCE_ITEM_LOADING":
       return {
@@ -244,10 +227,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       if (res.narrator.length > 0) {
         dispatch({ type: "SET_NARRATOR", narrator: res.narrator[0].name });
         if (res.narrator[0].speakers.length > 0) {
-          dispatch({
-            type: "SET_SPEAKER_ID",
-            speakerId: res.narrator[0].speakers[0].id,
-          });
+          dispatch({ type: "SET_SPEAKER_ID", speakerId: res.narrator[0].speakers[0].id });
         }
       }
     });
@@ -276,11 +256,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         return;
       }
       const res = await client.getNarration({ url, narrator, speakerId });
-      dispatch({
-        type: "UPDATE_NARRATION_STATUS",
-        status: res.status,
-        audioPath: res.path,
-      });
+      dispatch({ type: "UPDATE_NARRATION_STATUS", status: res.status, audioPath: res.path });
       if (res.status !== JobStatus.PROGRESSING) {
         clearInterval(timer);
       }
@@ -290,33 +266,41 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   }, [state.narration?.url, state.narration?.speakerId, client]);
 
   // Common handler: load SourceItem and update collection using item.collection.url.
-  // Automatically starts narration polling after SourceItem is loaded.
+  // Polls until COMPLETED, then starts narration and loads CollectionDetail in parallel.
   const loadSourceItem = useCallback(
     async (url: string, disableCache = false) => {
       dispatch({ type: "SET_SOURCE_ITEM_LOADING", url });
-      const res = await client.getSourceItem({ url, disableCache });
+
+      // Poll getSourceItem until COMPLETED or FAILED
+      let res = await client.getSourceItem({ url, disableCache });
       dispatch({ type: "SET_SOURCE_ITEM", status: res.status, item: res.item });
 
-      // Use item.collection.url to load CollectionDetail
-      if (res.collection) {
-        const collectionUrl = res.collection.url;
-        dispatch({
-          type: "SET_COLLECTION_DETAIL_LOADING",
-          url: collectionUrl,
-          silent: true,
-        });
-        const colRes = await client.getSourceCollection({ url: collectionUrl });
-        if (colRes.collection) {
-          dispatch({
-            type: "SET_COLLECTION_DETAIL",
-            collection: colRes.collection,
-            items: colRes.items,
-          });
-        }
+      while (res.status === JobStatus.PROGRESSING) {
+        await new Promise((r) => setTimeout(r, POLLING_INTERVAL_MS));
+        res = await client.getSourceItem({ url });
+        dispatch({ type: "SET_SOURCE_ITEM", status: res.status, item: res.item });
       }
 
-      // Automatically start narration polling once SourceItem is loaded
+      if (res.status !== JobStatus.COMPLETED) return;
+
+      // Load CollectionDetail and start narration in parallel
       const { selectedNarrator, selectedSpeakerId } = state;
+
+      const collectionPromise = res.collection
+        ? (async () => {
+            const collectionUrl = res.collection!.url;
+            dispatch({ type: "SET_COLLECTION_DETAIL_LOADING", url: collectionUrl, silent: true });
+            const colRes = await client.getSourceCollection({ url: collectionUrl });
+            if (colRes.collection) {
+              dispatch({
+                type: "SET_COLLECTION_DETAIL",
+                collection: colRes.collection,
+                items: colRes.items,
+              });
+            }
+          })()
+        : Promise.resolve();
+
       if (selectedNarrator && selectedSpeakerId !== null) {
         dispatch({
           type: "SET_NARRATION",
@@ -328,6 +312,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           },
         });
       }
+
+      await collectionPromise;
     },
     [client, state.selectedNarrator, state.selectedSpeakerId],
   );
@@ -350,11 +336,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       dispatch({ type: "SET_COLLECTION_DETAIL_LOADING", url });
       const res = await client.getSourceCollection({ url });
       if (res.collection) {
-        dispatch({
-          type: "SET_COLLECTION_DETAIL",
-          collection: res.collection,
-          items: res.items,
-        });
+        dispatch({ type: "SET_COLLECTION_DETAIL", collection: res.collection, items: res.items });
       }
     },
     [client],
@@ -377,12 +359,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   );
 
   const startNarration = useCallback(async () => {
-    if (
-      !state.selectedSourceItemUrl ||
-      !state.selectedNarrator ||
-      state.selectedSpeakerId === null
-    )
-      return;
+    if (!state.selectedSourceItemUrl || !state.selectedNarrator || state.selectedSpeakerId === null) return;
     dispatch({
       type: "SET_NARRATION",
       narration: {
@@ -392,21 +369,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         status: JobStatus.PROGRESSING,
       },
     });
-  }, [
-    state.selectedSourceItemUrl,
-    state.selectedNarrator,
-    state.selectedSpeakerId,
-  ]);
+  }, [state.selectedSourceItemUrl, state.selectedNarrator, state.selectedSpeakerId]);
 
   const retryNarration = useCallback(async () => {
     if (!state.narration) return;
     dispatch({
       type: "SET_NARRATION",
-      narration: {
-        ...state.narration,
-        status: JobStatus.PROGRESSING,
-        audioPath: undefined,
-      },
+      narration: { ...state.narration, status: JobStatus.PROGRESSING, audioPath: undefined },
     });
     // Note: getNarration has no disable_cache option.
     // Call loadSourceItem(url, true) if SourceItem retry is also needed.
