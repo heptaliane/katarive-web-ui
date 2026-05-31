@@ -215,9 +215,11 @@ const POLLING_INTERVAL_MS = 2000;
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(reducer, initialState);
   const client = useRef<KatariveClient>(
-    import.meta.env.VITE_API_BASE_URL
-      ? createConnectClient(window.location.origin)
-      : createStubClient(),
+    // Use stub only in development when VITE_API_BASE_URL is not set.
+    // In production, always use the real client against the same origin.
+    import.meta.env.DEV && !import.meta.env.VITE_API_BASE_URL
+      ? createStubClient()
+      : createConnectClient(window.location.origin),
   ).current;
 
   // Load narrators on mount
