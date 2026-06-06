@@ -1,18 +1,10 @@
 import { useApp } from "../store/AppContext";
 
 export function Header() {
-  const {
-    state,
-    setInputUrl,
-    setNarrator,
-    setSpeakerId,
-    loadSourceItemFromUrl,
-  } = useApp();
+  const { state, setInputUrl, setNarrator, setSpeakerId, loadSourceItemFromUrl } = useApp();
   const { inputUrl, selectedNarrator, selectedSpeakerId, narrators } = state;
 
-  const selectedNarratorObj = narrators.find(
-    (n) => n.name === selectedNarrator,
-  );
+  const selectedNarratorObj = narrators.find((n) => n.name === selectedNarrator);
   const canLoad = inputUrl.trim() !== "";
 
   const handleLoad = () => {
@@ -21,7 +13,10 @@ export function Header() {
 
   return (
     <header className="header">
-      <div className="header-brand">Katarive</div>
+      <div className="header-brand">
+        <img src="/favicon.svg" className="header-logo" alt="" aria-hidden="true" />
+        Katarive
+      </div>
       <div className="header-controls">
         <input
           className="header-url-input"

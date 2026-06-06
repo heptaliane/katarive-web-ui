@@ -1,13 +1,7 @@
 /* ----------------------------------------
    Reset & Base
 ---------------------------------------- */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
   --color-bg: #0f1117;
@@ -25,7 +19,7 @@
   --header-height: 56px;
   --panel-collections-width: 220px;
   --panel-detail-width: 300px;
-  font-family: "Noto Sans JP", "Helvetica Neue", sans-serif;
+  font-family: 'Noto Sans JP', 'Helvetica Neue', sans-serif;
   font-size: 14px;
   color: var(--color-text);
   background: var(--color-bg);
@@ -89,12 +83,8 @@
   outline: none;
   transition: border-color 0.15s;
 }
-.header-url-input:focus {
-  border-color: var(--color-accent);
-}
-.header-url-input::placeholder {
-  color: var(--color-text-muted);
-}
+.header-url-input:focus { border-color: var(--color-accent); }
+.header-url-input::placeholder { color: var(--color-text-muted); }
 
 .header-select {
   height: 34px;
@@ -117,9 +107,7 @@
   font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
-  transition:
-    background 0.15s,
-    opacity 0.15s;
+  transition: background 0.15s, opacity 0.15s;
 }
 .header-narration-btn.active {
   background: var(--color-accent);
@@ -132,7 +120,7 @@
 }
 
 /* ----------------------------------------
-   Panels (common)
+   Panels (共通)
 ---------------------------------------- */
 .panel {
   display: flex;
@@ -189,12 +177,8 @@
   border-bottom: 1px solid var(--color-border);
   transition: background 0.12s;
 }
-.collection-item:hover {
-  background: var(--color-surface-2);
-}
-.collection-item.selected {
-  background: var(--color-selected);
-}
+.collection-item:hover { background: var(--color-surface-2); }
+.collection-item.selected { background: var(--color-selected); }
 
 .collection-item-title {
   font-size: 13px;
@@ -264,12 +248,8 @@
   border-bottom: 1px solid var(--color-border);
   transition: background 0.12s;
 }
-.source-item:hover {
-  background: var(--color-surface-2);
-}
-.source-item.selected {
-  background: var(--color-selected);
-}
+.source-item:hover { background: var(--color-surface-2); }
+.source-item.selected { background: var(--color-selected); }
 
 .source-item-title {
   font-size: 13px;
@@ -306,9 +286,7 @@
   white-space: nowrap;
   border-bottom: 1px solid var(--color-border);
 }
-.source-item-url-link:hover {
-  text-decoration: underline;
-}
+.source-item-url-link:hover { text-decoration: underline; }
 
 .source-item-content {
   padding: 16px;
@@ -319,7 +297,7 @@
 }
 
 /* ----------------------------------------
-   Narration Area
+   Narration エリア
 ---------------------------------------- */
 .narration-area {
   padding: 16px;
@@ -344,16 +322,12 @@
   width: 100%;
 }
 
-.narration-waiting,
-.narration-empty,
-.narration-error {
+.narration-waiting, .narration-empty, .narration-error {
   font-size: 13px;
   color: var(--color-text-muted);
 }
 
-.narration-error {
-  color: var(--color-error);
-}
+.narration-error { color: var(--color-error); }
 
 /* ----------------------------------------
    StatusBadge
@@ -366,26 +340,11 @@
   font-weight: 600;
   margin-left: 8px;
 }
-.status-progressing {
-  background: rgba(245, 158, 11, 0.15);
-  color: var(--color-warn);
-}
-.status-completed {
-  background: rgba(61, 214, 140, 0.12);
-  color: var(--color-success);
-}
-.status-failed {
-  background: rgba(248, 113, 113, 0.12);
-  color: var(--color-error);
-}
-.status-not-found {
-  background: var(--color-surface-2);
-  color: var(--color-text-muted);
-}
-.status-unspecified {
-  background: var(--color-surface-2);
-  color: var(--color-text-muted);
-}
+.status-progressing { background: rgba(245,158,11,0.15); color: var(--color-warn); }
+.status-completed   { background: rgba(61,214,140,0.12); color: var(--color-success); }
+.status-failed      { background: rgba(248,113,113,0.12); color: var(--color-error); }
+.status-not-found   { background: var(--color-surface-2); color: var(--color-text-muted); }
+.status-unspecified { background: var(--color-surface-2); color: var(--color-text-muted); }
 
 /* ----------------------------------------
    Narration audio area (below title)
@@ -408,8 +367,11 @@
    Source item content collapse
 ---------------------------------------- */
 .source-item-content-wrapper {
-  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
   border-bottom: 1px solid var(--color-border);
+  flex: 1;
+  min-height: 0;
 }
 
 .source-item-content {
@@ -418,6 +380,7 @@
   color: var(--color-text);
   white-space: pre-wrap;
   word-break: break-word;
+  padding: 12px 16px 0;
 }
 
 .source-item-content.collapsed {
@@ -427,17 +390,21 @@
 }
 
 .source-item-content.expanded {
-  display: block;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
 }
 
 .content-toggle-btn {
-  margin-top: 6px;
+  flex-shrink: 0;
+  padding: 6px 16px 10px;
   background: none;
   border: none;
   color: var(--color-accent);
   font-size: 12px;
   cursor: pointer;
-  padding: 0;
+  text-align: center;
+  width: 100%;
 }
 .content-toggle-btn:hover {
   text-decoration: underline;
@@ -461,9 +428,7 @@
   padding: 2px 6px;
   border-radius: 4px;
   line-height: 1;
-  transition:
-    color 0.15s,
-    background 0.15s;
+  transition: color 0.15s, background 0.15s;
 }
 .refresh-btn:hover {
   color: var(--color-accent);
@@ -511,9 +476,7 @@
   cursor: pointer;
   padding: 2px 8px;
   border-radius: 4px;
-  transition:
-    color 0.15s,
-    background 0.15s;
+  transition: color 0.15s, background 0.15s;
 }
 .batch-btn.active {
   color: var(--color-accent);
@@ -580,10 +543,16 @@
   animation: spin 1s linear infinite;
 }
 @keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ----------------------------------------
+   Header logo
+---------------------------------------- */
+.header-logo {
+  width: 1em;
+  height: 1em;
+  flex-shrink: 0;
+  align-self: flex-end;
 }
