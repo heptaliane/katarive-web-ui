@@ -14,7 +14,7 @@ export function Header() {
   return (
     <header className="header">
       <div className="header-brand">
-        <img src="/favicon.svg" className="header-logo" alt="" aria-hidden="true" />
+        <img src="/static/favicon.svg" className="header-logo" alt="" aria-hidden="true" />
         Katarive
       </div>
       <div className="header-controls">
