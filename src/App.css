@@ -1,7 +1,13 @@
 /* ----------------------------------------
    Reset & Base
 ---------------------------------------- */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
 :root {
   --color-bg: #0f1117;
@@ -19,7 +25,7 @@
   --header-height: 56px;
   --panel-collections-width: 220px;
   --panel-detail-width: 300px;
-  font-family: 'Noto Sans JP', 'Helvetica Neue', sans-serif;
+  font-family: "Noto Sans JP", "Helvetica Neue", sans-serif;
   font-size: 14px;
   color: var(--color-text);
   background: var(--color-bg);
@@ -47,7 +53,7 @@
 .header {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
   height: var(--header-height);
   padding: 0 20px;
   background: var(--color-surface);
@@ -55,7 +61,17 @@
   flex-shrink: 0;
 }
 
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
+}
+
 .header-brand {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
   font-size: 18px;
   font-weight: 700;
   color: var(--color-accent);
@@ -63,28 +79,72 @@
   white-space: nowrap;
 }
 
-.header-controls {
+.header-narrator {
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
   flex: 1;
+  min-width: 0;
+}
+
+.header-url-wrapper {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+  height: 34px;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  transition: border-color 0.15s;
+  overflow: hidden;
+}
+.header-url-wrapper:focus-within {
+  border-color: var(--color-accent);
 }
 
 .header-url-input {
   flex: 1;
   min-width: 0;
-  height: 34px;
+  height: 100%;
   padding: 0 12px;
-  background: var(--color-surface-2);
-  border: 1px solid var(--color-border);
-  border-radius: 6px;
+  background: transparent;
+  border: none;
   color: var(--color-text);
   font-size: 13px;
   outline: none;
-  transition: border-color 0.15s;
 }
-.header-url-input:focus { border-color: var(--color-accent); }
-.header-url-input::placeholder { color: var(--color-text-muted); }
+.header-url-input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.header-load-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border-radius: 0 5px 5px 0;
+  border: none;
+  border-left: 1px solid var(--color-border);
+  background: var(--color-accent);
+  color: #fff;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.header-load-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+.header-load-btn:not(:disabled):hover {
+  opacity: 0.85;
+}
 
 .header-select {
   height: 34px;
@@ -96,27 +156,6 @@
   font-size: 13px;
   cursor: pointer;
   outline: none;
-}
-
-.header-narration-btn {
-  height: 34px;
-  padding: 0 16px;
-  border-radius: 6px;
-  border: none;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: background 0.15s, opacity 0.15s;
-}
-.header-narration-btn.active {
-  background: var(--color-accent);
-  color: #fff;
-}
-.header-narration-btn.disabled {
-  background: var(--color-surface-2);
-  color: var(--color-text-muted);
-  cursor: not-allowed;
 }
 
 /* ----------------------------------------
@@ -177,8 +216,12 @@
   border-bottom: 1px solid var(--color-border);
   transition: background 0.12s;
 }
-.collection-item:hover { background: var(--color-surface-2); }
-.collection-item.selected { background: var(--color-selected); }
+.collection-item:hover {
+  background: var(--color-surface-2);
+}
+.collection-item.selected {
+  background: var(--color-selected);
+}
 
 .collection-item-title {
   font-size: 13px;
@@ -248,8 +291,12 @@
   border-bottom: 1px solid var(--color-border);
   transition: background 0.12s;
 }
-.source-item:hover { background: var(--color-surface-2); }
-.source-item.selected { background: var(--color-selected); }
+.source-item:hover {
+  background: var(--color-surface-2);
+}
+.source-item.selected {
+  background: var(--color-selected);
+}
 
 .source-item-title {
   font-size: 13px;
@@ -286,7 +333,9 @@
   white-space: nowrap;
   border-bottom: 1px solid var(--color-border);
 }
-.source-item-url-link:hover { text-decoration: underline; }
+.source-item-url-link:hover {
+  text-decoration: underline;
+}
 
 .source-item-content {
   padding: 16px;
@@ -322,12 +371,16 @@
   width: 100%;
 }
 
-.narration-waiting, .narration-empty, .narration-error {
+.narration-waiting,
+.narration-empty,
+.narration-error {
   font-size: 13px;
   color: var(--color-text-muted);
 }
 
-.narration-error { color: var(--color-error); }
+.narration-error {
+  color: var(--color-error);
+}
 
 /* ----------------------------------------
    StatusBadge
@@ -340,11 +393,26 @@
   font-weight: 600;
   margin-left: 8px;
 }
-.status-progressing { background: rgba(245,158,11,0.15); color: var(--color-warn); }
-.status-completed   { background: rgba(61,214,140,0.12); color: var(--color-success); }
-.status-failed      { background: rgba(248,113,113,0.12); color: var(--color-error); }
-.status-not-found   { background: var(--color-surface-2); color: var(--color-text-muted); }
-.status-unspecified { background: var(--color-surface-2); color: var(--color-text-muted); }
+.status-progressing {
+  background: rgba(245, 158, 11, 0.15);
+  color: var(--color-warn);
+}
+.status-completed {
+  background: rgba(61, 214, 140, 0.12);
+  color: var(--color-success);
+}
+.status-failed {
+  background: rgba(248, 113, 113, 0.12);
+  color: var(--color-error);
+}
+.status-not-found {
+  background: var(--color-surface-2);
+  color: var(--color-text-muted);
+}
+.status-unspecified {
+  background: var(--color-surface-2);
+  color: var(--color-text-muted);
+}
 
 /* ----------------------------------------
    Narration audio area (below title)
@@ -428,7 +496,9 @@
   padding: 2px 6px;
   border-radius: 4px;
   line-height: 1;
-  transition: color 0.15s, background 0.15s;
+  transition:
+    color 0.15s,
+    background 0.15s;
 }
 .refresh-btn:hover {
   color: var(--color-accent);
@@ -476,7 +546,9 @@
   cursor: pointer;
   padding: 2px 8px;
   border-radius: 4px;
-  transition: color 0.15s, background 0.15s;
+  transition:
+    color 0.15s,
+    background 0.15s;
 }
 .batch-btn.active {
   color: var(--color-accent);
@@ -543,8 +615,12 @@
   animation: spin 1s linear infinite;
 }
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* ----------------------------------------
