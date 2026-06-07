@@ -110,10 +110,10 @@ src/
 
 ## Tech stack
 
-| | |
-|---|---|
-| Framework | React 19 + Vite 8 |
-| Language | TypeScript 6 |
-| RPC | connect-es v2 (gRPC-Web transport) |
-| Protobuf | @bufbuild/protobuf v2 + protoc-gen-es v2 |
-| State | React Context + useReducer |
+|           |                                          |
+| --------- | ---------------------------------------- |
+| Framework | React 19 + Vite 8                        |
+| Language  | TypeScript 6                             |
+| RPC       | connect-es v2 (gRPC-Web transport)       |
+| Protobuf  | @bufbuild/protobuf v2 + protoc-gen-es v2 |
+| State     | React Context + useReducer               |

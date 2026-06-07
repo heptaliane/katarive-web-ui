@@ -268,6 +268,10 @@
   color: var(--color-text-muted);
   line-height: 1.6;
   border-bottom: 1px solid var(--color-border);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+  overflow: hidden;
 }
 
 .source-list-header {
